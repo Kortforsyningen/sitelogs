@@ -551,7 +551,8 @@ class SiteLocation(Section):
 class GnssReceiver(Section):
     def __init__(self):
         self._data = self._template_dict()
-        self.subtitle = [] 
+        self.subtitle = []
+        self.title = '' 
         self.number = None
 
     def _template_dict(self):
@@ -613,7 +614,7 @@ class GnssReceiver(Section):
     def string(self):
 
         section_text = f"""
-{self.subtitle[0]}  Receiver Type            : {self.receiver_type}
+3.{self.title}  Receiver Type            : {self.receiver_type}
      Satellite System         : {self.sat_sys}
      Serial Number            : (A20, but note the first A5 is used in SINEX)
      Firmware Version         : {self.firmware}
@@ -630,19 +631,21 @@ class GNSS(Section):
     def __init__(self):
         self._data = self._template_dict
         self._subsections = []
-        self._receivers = [GnssReceiver()]
         self.title = []
 
-    @property
-    def receiver(self, index):
-        return self._receivers[index]
 
-    @receiver.setter
-    def receiver(self, index, value):
-        if index > len(self._receivers):
-            self._receivers.append(GnssReceiver())
+    def __getitem__(self, index):
+        return self._subsections[index]
 
-        self._receivers[index] = value
+
+    def __setitem__(self, index, value):
+        try:
+            value.title = index+1
+            self._subsections[index] = value
+        except IndexError:
+            if index == len(self._subsections):
+                value.title = index+1
+                self._subsections.append(value)
 
     def _template_dict(self):
         data = {
@@ -666,7 +669,8 @@ class GNSS(Section):
             # index til subsection header
 
         for sec_no, subsection in enumerate(sections):
-            s = self.receiver(sec_no) 
+            s = GnssReceiver()
+            s.title = sec_no+1
             if subsection == sections[-1]:
                 s.read_lines(lines[subsection:])
             else:
@@ -1241,7 +1245,19 @@ if __name__ == "__main__":
 
     log2.site_identification.date = '2020-02-05'
     log2.site_identification.bedrock_condition = 'FRESH'
-    log2.gnss._receivers[0].receiver_type = 'receiver'
-
+    log2.gnss[0] = GnssReceiver()
+    log2.gnss[1] = GnssReceiver()
+    log2.gnss[0].receiver_type = 'Receiver 1'
+    log2.gnss[1].receiver_type = 'Receiver 2'
+    # Det ville gøre det lettere at bruge koden hvis man kunne gøre sådan her:
+    #
+    #  log2.gnss[0] = GnssReceiver(
+    #      receiver_type = 'Receiver 1',
+    #      sat_sys = 'GPS+GLONASS',
+    #      firmware = '3.2.5',
+    #      cutoff = '12',
+    #      additional = 'Dette er en super sej receiver...'
+    #  )
     log2.write('test2.log')
+
 
