@@ -36,6 +36,7 @@ class Section():
     def __init__(self):
         self.title = ''
         self.subtitle = []
+ #       self.subsubtitle = ''
         self.subsections = []
         self._data = {}
 
@@ -70,9 +71,48 @@ class Section():
                 (key, value) = [s.strip() for s in line.split(' : ')]
                 self._data[key] = value
 
+class SectionList(Section):
+#class for sections with subsections
+    def __init__(self):
+        super().__init__()
+        self._subsections = []
+        self.subsection_type = None
+        self.section_type = ''
+
+    def __getitem__(self, index):
+        return self._subsections[index]
 
 
+    def __setitem__(self, index, value):
+        try:
+            value.title = index+1
+            self._subsections[index] = value
+        except IndexError:
+            if index == len(self._subsections):
+                value.title = index+1
+                self._subsections.append(value)
                 
+    def read_lines(self, lines):
+        sections = []
+        for line_no, line in enumerate(lines):
+            if _determine_line_type(line) == self.section_type:
+                    sections.append(line_no)
+            # index til subsection header
+
+        for sec_no, subsection in enumerate(sections):
+            s = self.subsection_type()
+            s.title = sec_no+1
+            if subsection == sections[-1]:
+                s.read_lines(lines[subsection:])
+            else:
+                s.read_lines(lines[subsection:sections[sec_no+1]])
+            self._subsections.append(s)
+
+class SubSection(Section):
+    #Class for subsections of SectionList
+    def __init__(self):
+        super().__init__()
+
 
 
 class Header():
@@ -548,12 +588,14 @@ class SiteLocation(Section):
 """
         return section_text
 
-class GnssReceiver(Section):
+class GnssReceiver(SubSection):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subtitle = []
-        self.title = '' 
+#        self.subtitle = []
+#        self.title = '' 
         self.number = None
+ #       self._data['Receiver Type'] = receiver_type
 
     def _template_dict(self):
         data = {
@@ -627,25 +669,12 @@ class GnssReceiver(Section):
 """
         return section_text
 
-class GNSS(Section):
+class GNSS(SectionList):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict
-        self._subsections = []
-        self.title = []
-
-
-    def __getitem__(self, index):
-        return self._subsections[index]
-
-
-    def __setitem__(self, index, value):
-        try:
-            value.title = index+1
-            self._subsections[index] = value
-        except IndexError:
-            if index == len(self._subsections):
-                value.title = index+1
-                self._subsections.append(value)
+        self.subsection_type = GnssReceiver
+        self.section_type = 'subsectionheader' #subsection 
 
     def _template_dict(self):
         data = {
@@ -661,22 +690,6 @@ class GNSS(Section):
         }
         return data
 
-    def read_lines(self, lines):
-        sections = []
-        for line_no, line in enumerate(lines):
-            if _determine_line_type(line) == 'subsectionheader':
-                    sections.append(line_no)
-            # index til subsection header
-
-        for sec_no, subsection in enumerate(sections):
-            s = GnssReceiver()
-            s.title = sec_no+1
-            if subsection == sections[-1]:
-                s.read_lines(lines[subsection:])
-            else:
-                s.read_lines(lines[subsection:sections[sec_no+1]])
-            self._subsections.append(s)
-
 
     def string(self):
 
@@ -688,15 +701,15 @@ class GNSS(Section):
                 section_text += subsection.string() 
         else:
             s = GnssReceiver()
-            s.subtitle = ['3.x']
+            s.title = 'x'
             section_text += s.string()
         return section_text
 
-class AntennaType(Section):
+class AntennaType(SubSection):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subtitle = [] 
-        self.number = None
+#        self.number = None
 
     def _template_dict(self):
         data = {
@@ -718,12 +731,35 @@ class AntennaType(Section):
         }
         return data
 
+    @property
+    def antenna_type(self):
+        return self._data['Antenna Type']
+
+    @antenna_type.setter
+    def antenna_type(self, value):
+        self._data['Antenna Type'] = value
+
+    @property
+    def serial_number(self):
+        return self._data['Serial Number']
+
+    @serial_number.setter
+    def serial_number(self, value):
+        self._data['Serial Number'] = value
+
+    @property
+    def antenna_reference(self):
+        return self._data['Antenna Reference Point']
+
+    @antenna_reference.setter
+    def antenna_reference(self, value):
+        self._data['Serial Number'] = value
 
     def string(self):
 
         section_text = f"""
-{self.subtitle[0]}  Antenna Type             : (A20, from rcvr_ant.tab; see instructions)
-     Serial Number            : (A*, but note the first A5 is used in SINEX)
+4.{self.title}  Antenna Type             : {self.antenna_type}
+     Serial Number            : {self.serial_number}
      Antenna Reference Point  : (BPA/BCR/XXX from "antenna.gra"; see instr.)
      Marker->ARP Up Ecc. (m)  : (F8.4)
      Marker->ARP North Ecc(m) : (F8.4)
@@ -739,11 +775,13 @@ class AntennaType(Section):
 """
         return section_text
 
-class Antenna(Section):
+class Antenna(SectionList):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subsections = []
-        self.title = []
+        self.subsection_type = AntennaType
+        self.section_type = 'subsectionheader'
+
 
     def _template_dict(self):
         data = {
@@ -765,40 +803,24 @@ class Antenna(Section):
         }
         return data
 
-    def read_lines(self, lines):
-        sections = []
-        for line_no, line in enumerate(lines):
-            if _determine_line_type(line) == 'subsectionheader':
-                    sections.append(line_no)
-            # index til subsection header
-
-        for sec_no, subsection in enumerate(sections):
-            s = AntennaType()
-            if subsection == sections[-1]:
-                s.read_lines(lines[subsection:])
-            else:
-                s.read_lines(lines[subsection:sections[sec_no+1]])
-            self.subsections.append(s)
-
-
     def string(self):
 
         section_text = f"""
 4.   GNSS Antenna Information
 """
-        if self.subsections:
-            for subsection in self.subsections:
+        if self._subsections:
+            for subsection in self._subsections:
                 section_text += subsection.string() 
         else:
             s = AntennaType()
-            s.subtitle = ['4.x']
+            s.title = 'x'
             section_text += s.string()
         return section_text
 
-class Tie(Section):
+class Tie(SubSection):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subtitle = [] 
         self.number = None
 
     def _template_dict(self):
@@ -822,7 +844,7 @@ class Tie(Section):
     def string(self):
 
         section_text = f"""
-{self.subtitle[0]}  Tied Marker Name         : 
+5.{self.title}  Tied Marker Name         : 
      Tied Marker Usage        : (SLR/VLBI/LOCAL CONTROL/FOOTPRINT/etc)
      Tied Marker CDP Number   : (A4)
      Tied Marker DOMES Number : (A9)
@@ -837,11 +859,12 @@ class Tie(Section):
 """
         return section_text
 
-class LocalTies(Section):
+class LocalTies(SectionList):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subsections = []
-        self.title = []
+        self.subsection_type = Tie
+        self.section_type = 'subsectionheader'
 
     def _template_dict(self):
         data = {
@@ -861,29 +884,14 @@ class LocalTies(Section):
         }
         return data
 
-    def read_lines(self, lines):
-        sections = []
-        for line_no, line in enumerate(lines):
-            if _determine_line_type(line) == 'subsectionheader':
-                    sections.append(line_no)
-            # index til subsection header
-
-        for sec_no, subsection in enumerate(sections):
-            s = Tie()
-            if subsection == sections[-1]:
-                s.read_lines(lines[subsection:])
-            else:
-                s.read_lines(lines[subsection:sections[sec_no+1]])
-            self.subsections.append(s)
-
 
     def string(self):
 
         section_text = f"""
 5.   Surveyed Local Ties
 """
-        if self.subsections:
-            for subsection in self.subsections:
+        if self._subsections:
+            for subsection in self._subsections:
                 section_text += subsection.string() 
         else:
             s = Tie()
@@ -891,10 +899,10 @@ class LocalTies(Section):
             section_text += s.string()
         return section_text
 
-class Frequency(Section):
+class Frequency(SubSection):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subtitle = [] 
         self.number = None
 
     def _template_dict(self):
@@ -909,18 +917,20 @@ class Frequency(Section):
     def string(self):
 
         section_text = f"""
-{self.subtitle[0]}  Standard Type            : (INTERNAL or EXTERNAL H-MASER/CESIUM/etc)
+6.{self.title}  Standard Type            : (INTERNAL or EXTERNAL H-MASER/CESIUM/etc)
        Input Frequency        : (if external)
        Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
        Notes                  : (multiple lines)
 """
         return section_text
 
-class FrequencyStandard(Section):
+class FrequencyStandard(SectionList):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subsections = []
-        self.title = []
+        self.subsection_type = Frequency
+        self.section_type = 'subsectionheader'
+
 
     def _template_dict(self):
         data = {
@@ -930,21 +940,6 @@ class FrequencyStandard(Section):
             "Notes": "(multiple lines)",
         }
         return data
-
-    def read_lines(self, lines):
-        sections = []
-        for line_no, line in enumerate(lines):
-            if _determine_line_type(line) == 'subsectionheader':
-                    sections.append(line_no)
-            # index til subsection header
-
-        for sec_no, subsection in enumerate(sections):
-            s = Frequency()
-            if subsection == sections[-1]:
-                s.read_lines(lines[subsection:])
-            else:
-                s.read_lines(lines[subsection:sections[sec_no+1]])
-            self.subsections.append(s)
 
 
     def string(self):
@@ -952,19 +947,19 @@ class FrequencyStandard(Section):
         section_text = f"""
 6.   Frequency Standard
 """
-        if self.subsections:
-            for subsection in self.subsections:
+        if self._subsections:
+            for subsection in self._subsections:
                 section_text += subsection.string() 
         else:
             s = Frequency()
-            s.subtitle = ['6.x']
+            s.title = '6.x'
             section_text += s.string()
         return section_text
 
-class CollocationInstrument(Section):
+class CollocationInstrument(SubSection):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subtitle = [] 
         self.number = None
 
     def _template_dict(self):
@@ -979,18 +974,19 @@ class CollocationInstrument(Section):
     def string(self):
 
         section_text = f"""
-{self.subtitle[0]}  Instrumentation Type     : (GPS/GLONASS/DORIS/PRARE/SLR/VLBI/TIME/etc)
+7.{self.title}  Instrumentation Type     : (GPS/GLONASS/DORIS/PRARE/SLR/VLBI/TIME/etc)
        Status                 : (PERMANENT/MOBILE)
        Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
        Notes                  : (multiple lines)
 """
         return section_text
 
-class Collocation(Section):
+class Collocation(SectionList):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subsections = []
-        self.title = []
+        self.subsection_type = CollocationInstrument
+        self.section_type = 'subsectionheader'
 
     def _template_dict(self):
         data = {
@@ -1001,20 +997,6 @@ class Collocation(Section):
         }
         return data
 
-    def read_lines(self, lines):
-        sections = []
-        for line_no, line in enumerate(lines):
-            if _determine_line_type(line) == 'subsectionheader':
-                    sections.append(line_no)
-            # index til subsection header
-
-        for sec_no, subsection in enumerate(sections):
-            s = CollocationInstrument()
-            if subsection == sections[-1]:
-                s.read_lines(lines[subsection:])
-            else:
-                s.read_lines(lines[subsection:sections[sec_no+1]])
-            self.subsections.append(s)
 
 
     def string(self):
@@ -1022,21 +1004,26 @@ class Collocation(Section):
         section_text = f"""
 7.   Collocation Information
 """
-        if self.subsections:
-            for subsection in self.subsections:
+        if self._subsections:
+            for subsection in self._subsections:
                 section_text += subsection.string() 
         else:
             s = CollocationInstrument()
-            s.subtitle = ['7.x']
+            s.title = 'x'
             section_text += s.string()
         return section_text
 
 
+
+
 class MetInstrument(Section):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subtitle = [] 
         self.number = None
+        self.type = ''
+        self.header_title = ''
+#        self.subsubtitle = ''
 
     def _template_dict(self):
         data = {
@@ -1101,11 +1088,11 @@ class MetInstrument(Section):
     def string(self):
         if re.match(r'^8\.5\.[\dx]+.+:$', self.subtitle[0]):
             section_text = f"""
-{self.subtitle[0]} {self.other}
+8.{self.title} {self.other}
     """
         else:
             section_text = f"""
-{self.subtitle[0]} {self.header_val}
+8.{self.subsubtitle}.{self.title} {self.header_title} {self.header_val}
        Manufacturer           : 
        Serial Number          : 
        Data Sampling Interval : (sec)
@@ -1117,11 +1104,15 @@ class MetInstrument(Section):
     """
         return section_text
 
-class Meterological(Section):
+
+
+class Meterological(SectionList):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
-        self.subsections = []
-        self.title = []
+        self.subsection_type = MetInstrument
+        self.section_type = 'subsubsectionheader'
+
 
     def _template_dict(self):
         data = {
@@ -1142,20 +1133,21 @@ class Meterological(Section):
         }
         return data
 
-    def read_lines(self, lines):
-        sections = []
-        for line_no, line in enumerate(lines):
-            if _determine_line_type(line) == 'subsubsectionheader':
-                    sections.append(line_no)
-            # index til subsubsection header
 
-        for sec_no, subsection in enumerate(sections):
-            s = MetInstrument()
-            if subsection == sections[-1]:
-                s.read_lines(lines[subsection:])
-            else:
-                s.read_lines(lines[subsection:sections[sec_no+1]])
-            self.subsections.append(s)
+    # def read_lines(self, lines):
+    #     sections = []
+    #     for line_no, line in enumerate(lines):
+    #         if _determine_line_type(line) == 'subsubsectionheader':
+    #                 sections.append(line_no)
+    #         # index til subsubsection header
+
+    #     for sec_no, subsection in enumerate(sections):
+    #         s = MetInstrument()
+    #         if subsection == sections[-1]:
+    #             s.read_lines(lines[subsection:])
+    #         else:
+    #             s.read_lines(lines[subsection:sections[sec_no+1]])
+    #         self.subsections.append(s)
 
 
     def string(self):
@@ -1163,8 +1155,8 @@ class Meterological(Section):
         section_text = f"""
 8.   Meteorological Instrumentation
 """
-        if self.subsections:
-            for subsection in self.subsections:
+        if self._subsections:
+            for subsection in self._subsections:
                 section_text += subsection.string() 
         else:
             subsubtitles = ['8.1.x Humidity Sensor Model   :', '8.2.x Pressure Sensor Model   :', '8.3.x Temp. Sensor Model      :', '8.4.x Water Vapor Radiometer  :', '8.5.x Other Instrumentation   :']
@@ -1173,6 +1165,27 @@ class Meterological(Section):
                 s.subtitle = [subsubtitle]
                 section_text += s.string()
         return section_text
+
+class Humidity(Meterological):
+    def __init__(self):
+        self.type = 'Humidity Sensor Model'
+        self.header_title = 'Humidity Sensor Model   :'
+        self.subsubtitle = 1
+        super().__init__()
+
+class Pressure(Meterological):
+    def __init__(self):
+        super().__init__()
+        self.type = 'Pressure Sensor Model'
+        self.header_title = 'Pressure Sensor Model   :'
+        self.subsubtitle = 2
+
+class Temp(Meterological):
+    def __init__(self):
+        super().__init__()
+        self.type = 'Temp. Sensor Model'
+        self.header_title = 'Temp. Sensor Model      :'
+        self.subsubtitle = 1
 
 class SiteLog():
 
@@ -1188,7 +1201,7 @@ class SiteLog():
         self.local_ties = LocalTies()
         self.frequency = FrequencyStandard()
         self.collocation = Collocation()
-        self.meterological = Meterological()
+        self.humidity = Humidity()
         if sitelogfile is not None:
             self._read()
 
@@ -1209,7 +1222,7 @@ class SiteLog():
             self.local_ties.read_lines(lines[sections[5]:sections[6]])
             self.frequency.read_lines(lines[sections[6]:sections[7]])
             self.collocation.read_lines(lines[sections[7]:sections[8]])
-            self.meterological.read_lines(lines[sections[8]:sections[9]])
+            self.humidity.read_lines(lines[sections[8]:sections[9]])
 
 
 
@@ -1224,7 +1237,7 @@ class SiteLog():
             f.write(self.local_ties.string())
             f.write(self.frequency.string())
             f.write(self.collocation.string())
-            f.write(self.meterological.string())
+            f.write(self.humidity.string())
 
 
 if __name__ == "__main__":
