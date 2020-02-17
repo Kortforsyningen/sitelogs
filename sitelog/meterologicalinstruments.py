@@ -1,7 +1,11 @@
-import sitelog.sitelogger as sitelogger
 import re
 
-class MetInstrument(sitelogger.Section):
+from sitelog.sections import (
+    Section,
+    SectionList,
+)
+
+class MetInstrument(Section):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -91,7 +95,7 @@ class MetInstrument(sitelogger.Section):
 
 
 
-class Meterological(sitelogger.SectionList):
+class Meterological(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()

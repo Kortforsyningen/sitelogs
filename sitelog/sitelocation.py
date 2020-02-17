@@ -1,7 +1,8 @@
-import sitelog.sitelogger as sitelogger
 import re
 
-class SiteLocation(sitelogger.Section):
+from sitelog.sections import Section
+
+class SiteLocation(Section):
 
     def _template_dict(self):
 

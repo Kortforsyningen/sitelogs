@@ -1,7 +1,7 @@
 import re
-import sitelog.sitelogger as sitelogger
+from sitelog.sections import Section
 
-class SiteIdentification(sitelogger.Section):
+class SiteIdentification(Section):
 
     def _template_dict(self):
         """

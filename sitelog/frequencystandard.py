@@ -1,7 +1,11 @@
-import sitelog.sitelogger as sitelogger
 import re
 
-class Frequency(sitelogger.SubSection):
+from sitelog.sections import (
+    SubSection,
+    SectionList,
+)
+
+class Frequency(SubSection):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -26,7 +30,7 @@ class Frequency(sitelogger.SubSection):
 """
         return section_text
 
-class FrequencyStandard(sitelogger.SectionList):
+class FrequencyStandard(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()

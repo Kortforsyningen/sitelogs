@@ -1,5 +1,6 @@
-import sitelog.sitelogger as sitelogger
+from sitelog.sections import Section
 import re
+
 
 class Header():
     def __init__(self, code='XXXX'):
@@ -16,7 +17,7 @@ class Header():
 """
         return text
 
-class Form(sitelogger.Section):
+class Form(Section):
     
     def __init__(self):
         self._data = self._template_dict()

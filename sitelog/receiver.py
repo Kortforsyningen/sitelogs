@@ -1,7 +1,11 @@
-import sitelog.sitelogger as sitelogger
 import re
 
-class GnssReceiver(sitelogger.SubSection):
+from sitelog.sections import (
+        SubSection,
+        SectionList,
+)
+
+class GnssReceiver(SubSection):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -82,7 +86,7 @@ class GnssReceiver(sitelogger.SubSection):
 """
         return section_text
 
-class GNSS(sitelogger.SectionList):
+class GNSS(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict

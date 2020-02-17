@@ -1,7 +1,11 @@
-import sitelog.sitelogger as sitelogger
 import re
 
-class AntennaType(sitelogger.SubSection):
+from sitelog.sections import (
+    SubSection,
+    SectionList,
+)
+
+class AntennaType(SubSection):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -71,7 +75,7 @@ class AntennaType(sitelogger.SubSection):
 """
         return section_text
 
-class Antenna(sitelogger.SectionList):
+class Antenna(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()

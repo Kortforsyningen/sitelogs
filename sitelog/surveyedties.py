@@ -1,7 +1,11 @@
-import sitelog.sitelogger as sitelogger
 import re
 
-class Tie(sitelogger.SubSection):
+from sitelog.sections import (
+    SubSection,
+    SectionList,
+)
+
+class Tie(SubSection):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -43,7 +47,7 @@ class Tie(sitelogger.SubSection):
 """
         return section_text
 
-class LocalTies(sitelogger.SectionList):
+class LocalTies(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()

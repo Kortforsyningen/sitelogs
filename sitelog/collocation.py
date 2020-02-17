@@ -1,7 +1,11 @@
-import sitelog.sitelogger as sitelogger
 import re
 
-class CollocationInstrument(sitelogger.SubSection):
+from sitelog.sections import (
+    SubSection,
+    SectionList,
+)
+
+class CollocationInstrument(SubSection):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -26,7 +30,7 @@ class CollocationInstrument(sitelogger.SubSection):
 """
         return section_text
 
-class Collocation(sitelogger.SectionList):
+class Collocation(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
