@@ -1,4 +1,4 @@
-import sitelogger
+import sitelog.sitelogger as sitelogger
 import re
 
 class Header():

@@ -1,5 +1,5 @@
 import re
-import sitelogger
+import sitelog.sitelogger as sitelogger
 
 class SiteIdentification(sitelogger.Section):
 
