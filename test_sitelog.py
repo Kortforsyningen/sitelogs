@@ -1,5 +1,7 @@
-from sitelog import SiteLog
-import sitelog.receiver as receiver
+from sitelog import (
+    SiteLog,
+    GnssReceiver,
+)
 
 if __name__ == "__main__":
     # Læs fra en eksisterende sitelog
@@ -19,8 +21,8 @@ if __name__ == "__main__":
 
     log2.site_identification.date = '2020-02-05'
     log2.site_identification.bedrock_condition = 'FRESH'
-    log2.gnss[0] = receiver.GnssReceiver()
-    log2.gnss[1] = receiver.GnssReceiver()
+    log2.gnss[0] = GnssReceiver()
+    log2.gnss[1] = GnssReceiver()
     log2.gnss[0].receiver_type = 'Receiver 1'
     log2.gnss[1].receiver_type = 'Receiver 2'
     # Det ville gøre det lettere at bruge koden hvis man kunne gøre sådan her:
