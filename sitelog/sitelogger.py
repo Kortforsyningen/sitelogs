@@ -17,7 +17,7 @@ import sitelog.meterologicalinstruments as meterologicalinstruments
 class SiteLog():
 
     def __init__(self, sitelogfile=None):
-        
+
         self.logfile = sitelogfile
         self.header = header_form.Header()
         self.form = header_form.Form()

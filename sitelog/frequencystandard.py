@@ -55,7 +55,7 @@ class FrequencyStandard(SectionList):
 """
         if self._subsections:
             for subsection in self._subsections:
-                section_text += subsection.string() 
+                section_text += subsection.string()
         else:
             s = Frequency()
             s.title = '6.x'

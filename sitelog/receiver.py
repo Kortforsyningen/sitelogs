@@ -10,7 +10,7 @@ class GnssReceiver(SubSection):
         super().__init__()
         self._data = self._template_dict()
 #        self.subtitle = []
-#        self.title = '' 
+#        self.title = ''
         self.number = None
  #       self._data['Receiver Type'] = receiver_type
 
@@ -91,7 +91,7 @@ class GNSS(SectionList):
         super().__init__()
         self._data = self._template_dict
         self.subsection_type = GnssReceiver
-        self.section_type = 'subsectionheader' #subsection 
+        self.section_type = 'subsectionheader' #subsection
 
     def _template_dict(self):
         data = {
@@ -115,7 +115,7 @@ class GNSS(SectionList):
 """
         if self._subsections:
             for subsection in self._subsections:
-                section_text += subsection.string() 
+                section_text += subsection.string()
         else:
             s = GnssReceiver()
             s.title = 'x'

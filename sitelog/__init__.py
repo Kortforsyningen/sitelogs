@@ -18,7 +18,7 @@ def _determine_line_type(line):
             line_type = 'key_value'
     else:
         line_type = 'freeform'
-    
+
     return line_type
 
 from .sitelogger import SiteLog

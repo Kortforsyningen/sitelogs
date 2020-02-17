@@ -82,8 +82,8 @@ class MetInstrument(Section):
         else:
             section_text = f"""
 8.{self.subsubtitle}.{self.title} {self.header_title} {self.header_val}
-       Manufacturer           : 
-       Serial Number          : 
+       Manufacturer           :
+       Serial Number          :
        Data Sampling Interval : (sec)
        Accuracy               : (hPa)
        Height Diff to Ant     : (m)
@@ -132,7 +132,7 @@ class Meterological(SectionList):
 """
         if self._subsections:
             for subsection in self._subsections:
-                section_text += subsection.string() 
+                section_text += subsection.string()
         else:
             # subsubtitles = ['8.1.x Humidity Sensor Model   :', '8.2.x Pressure Sensor Model   :', '8.3.x Temp. Sensor Model      :', '8.4.x Water Vapor Radiometer  :', '8.5.x Other Instrumentation   :']
             # for subsubtitle in subsubtitles:

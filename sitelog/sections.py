@@ -64,7 +64,7 @@ class SectionList(Section):
             if index == len(self._subsections):
                 value.title = index+1
                 self._subsections.append(value)
-                
+
     def read_lines(self, lines):
         sections = []
         for line_no, line in enumerate(lines):

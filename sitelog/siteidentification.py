@@ -117,7 +117,7 @@ class SiteIdentification(Section):
 
     @marker.setter
     def marker(self, value):
-        self._data['Marker Description'] = value        
+        self._data['Marker Description'] = value
 
     @property
     def date(self):
@@ -127,7 +127,7 @@ class SiteIdentification(Section):
     def date(self, value):
         if not re.match(r'^\d{4}\-\d\d\-\d\d', value):
             raise ValueError("Date Installed must be of the format (CCYY-MM-DDThh:mmZ)")
-        self._data['Date Installed'] = value    
+        self._data['Date Installed'] = value
 
     @property
     def geologic(self):
@@ -145,7 +145,7 @@ class SiteIdentification(Section):
     def bedrock_type(self, value):
         if not value == 'IGNEOUS' or value == 'METAMORPHIC' or value == 'SEDIMENTARY':
             raise ValueError("The Bedrock Type must be IGNEOUS, METAMORPHIC or SEDIMENTARY")
-        self._data['Bedrock Type'] = value 
+        self._data['Bedrock Type'] = value
 
     @property
     def bedrock_condition(self):
@@ -155,7 +155,7 @@ class SiteIdentification(Section):
     def bedrock_condition(self, value):
         if not value == 'FRESH' or value == 'JOINTED' or value == 'WEATHERED':
             raise ValueError("The Bedrock Condition must be FRESH, JOINTED or WEATHERED")
-        self._data['Bedrock Condition'] = value 
+        self._data['Bedrock Condition'] = value
 
     @property
     def fracture(self):
@@ -165,7 +165,7 @@ class SiteIdentification(Section):
     def fracture(self, value):
         if not value == '1-10 cm' or value == '11-50 cm' or value == '51-200 cm' or value == 'over 200 cm':
             raise ValueError("The Fracture Spacing must be in the ranges 1-10 cm, 11-50 cm, 51-200 cm or over 200 cm")
-        self._data['Fracture Spacing'] = value 
+        self._data['Fracture Spacing'] = value
 
     @property
     def fault(self):
@@ -217,7 +217,7 @@ class SiteIdentification(Section):
          Distance/activity    : {self.distance}
      Additional Information   : {self.additional}
 """
-     
-    
+
+
 
         return section_text

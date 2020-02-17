@@ -66,12 +66,12 @@ class AntennaType(SubSection):
      Marker->ARP East Ecc(m)  : (F8.4)
      Alignment from True N    : (deg; + is clockwise/east)
      Antenna Radome Type      : (A4 from rcvr_ant.tab; see instructions)
-     Radome Serial Number     : 
+     Radome Serial Number     :
      Antenna Cable Type       : (vendor & type number)
      Antenna Cable Length     : (m)
      Date Installed           : (CCYY-MM-DDThh:mmZ)
      Date Removed             : (CCYY-MM-DDThh:mmZ)
-     Additional Information   : (multiple lines) 
+     Additional Information   : (multiple lines)
 """
         return section_text
 
@@ -110,7 +110,7 @@ class Antenna(SectionList):
 """
         if self._subsections:
             for subsection in self._subsections:
-                section_text += subsection.string() 
+                section_text += subsection.string()
         else:
             s = AntennaType()
             s.title = 'x'

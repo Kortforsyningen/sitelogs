@@ -13,7 +13,7 @@ class Tie(SubSection):
 
     def _template_dict(self):
         data = {
-            "Tied Marker Name": "",  
+            "Tied Marker Name": "",
             "Tied Marker Usage": "(SLR/VLBI/LOCAL CONTROL/FOOTPRINT/etc)",
             "Tied Marker CDP Number": "(A4)",
             "Tied Marker DOMES Number": "(A9)",
@@ -32,7 +32,7 @@ class Tie(SubSection):
     def string(self):
 
         section_text = f"""
-5.{self.title}  Tied Marker Name         : 
+5.{self.title}  Tied Marker Name         :
      Tied Marker Usage        : (SLR/VLBI/LOCAL CONTROL/FOOTPRINT/etc)
      Tied Marker CDP Number   : (A4)
      Tied Marker DOMES Number : (A9)
@@ -56,7 +56,7 @@ class LocalTies(SectionList):
 
     def _template_dict(self):
         data = {
-            "Tied Marker Name": "",    
+            "Tied Marker Name": "",
             "Tied Marker Usage": "(SLR/VLBI/LOCAL CONTROL/FOOTPRINT/etc)",
             "Tied Marker CDP Number": "(A4)",
             "Tied Marker DOMES Number": "(A9)",
@@ -80,7 +80,7 @@ class LocalTies(SectionList):
 """
         if self._subsections:
             for subsection in self._subsections:
-                section_text += subsection.string() 
+                section_text += subsection.string()
         else:
             s = Tie()
             s.subtitle = ['5.x']

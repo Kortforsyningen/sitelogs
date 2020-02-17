@@ -18,7 +18,7 @@ class Header():
         return text
 
 class Form(Section):
-    
+
     def __init__(self):
         self._data = self._template_dict()
 
@@ -36,7 +36,7 @@ class Form(Section):
 
     @property
     def prepared_by(self):
-        return self._data["Prepared by (full name)"] 
+        return self._data["Prepared by (full name)"]
 
     @prepared_by.setter
     def prepared_by(self, value):
