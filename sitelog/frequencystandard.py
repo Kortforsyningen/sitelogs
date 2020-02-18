@@ -1,7 +1,11 @@
-import sitelogger
 import re
 
-class CollocationInstrument(sitelogger.SubSection):
+from sitelog.sections import (
+    SubSection,
+    SectionList,
+)
+
+class Frequency(SubSection):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -9,8 +13,8 @@ class CollocationInstrument(sitelogger.SubSection):
 
     def _template_dict(self):
         data = {
-            "Instrumentation Type": "(GPS/GLONASS/DORIS/PRARE/SLR/VLBI/TIME/etc)",
-            "Status": "(PERMANENT/MOBILE)",
+            "Standard Type": "(INTERNAL or EXTERNAL H-MASER/CESIUM/etc)",
+            "Input Frequency": "(if external)",
             "Effective Dates": "(CCYY-MM-DD/CCYY-MM-DD)",
             "Notes": "(multiple lines)",
         }
@@ -19,42 +23,41 @@ class CollocationInstrument(sitelogger.SubSection):
     def string(self):
 
         section_text = f"""
-7.{self.title}  Instrumentation Type     : (GPS/GLONASS/DORIS/PRARE/SLR/VLBI/TIME/etc)
-       Status                 : (PERMANENT/MOBILE)
+6.{self.title}  Standard Type            : (INTERNAL or EXTERNAL H-MASER/CESIUM/etc)
+       Input Frequency        : (if external)
        Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
        Notes                  : (multiple lines)
 """
         return section_text
 
-class Collocation(sitelogger.SectionList):
+class FrequencyStandard(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
-        self.subsection_type = CollocationInstrument
+        self.subsection_type = Frequency
         self.section_type = 'subsectionheader'
+
 
     def _template_dict(self):
         data = {
-            "Instrumentation Type": "(GPS/GLONASS/DORIS/PRARE/SLR/VLBI/TIME/etc)",
-            "Status": "(PERMANENT/MOBILE)",
+            "Standard Type": "(INTERNAL or EXTERNAL H-MASER/CESIUM/etc)",
+            "Input Frequency": "(if external)",
             "Effective Dates": "(CCYY-MM-DD/CCYY-MM-DD)",
             "Notes": "(multiple lines)",
         }
         return data
 
 
-
     def string(self):
 
         section_text = f"""
-7.   Collocation Information
+6.   Frequency Standard
 """
         if self._subsections:
             for subsection in self._subsections:
-                section_text += subsection.string() 
+                section_text += subsection.string()
         else:
-            s = CollocationInstrument()
-            s.title = 'x'
+            s = Frequency()
+            s.title = '6.x'
             section_text += s.string()
         return section_text
-

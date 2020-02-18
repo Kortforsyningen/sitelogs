@@ -1,5 +1,6 @@
-import sitelogger
+from sitelog.sections import Section
 import re
+
 
 class Header():
     def __init__(self, code='XXXX'):
@@ -16,8 +17,8 @@ class Header():
 """
         return text
 
-class Form(sitelogger.Section):
-    
+class Form(Section):
+
     def __init__(self):
         self._data = self._template_dict()
 
@@ -35,7 +36,7 @@ class Form(sitelogger.Section):
 
     @property
     def prepared_by(self):
-        return self._data["Prepared by (full name)"] 
+        return self._data["Prepared by (full name)"]
 
     @prepared_by.setter
     def prepared_by(self, value):
