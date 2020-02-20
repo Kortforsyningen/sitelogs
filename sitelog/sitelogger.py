@@ -28,7 +28,7 @@ class SiteLog():
         self.local_ties = surveyedties.LocalTies()
         self.frequency = frequencystandard.FrequencyStandard()
         self.collocation = collocation.Collocation()
-        self.humidity = meterologicalinstruments.Humidity()
+#        self.humidity = meterologicalinstruments.Humidity()
         if sitelogfile is not None:
             self._read()
 
@@ -49,7 +49,7 @@ class SiteLog():
             self.local_ties.read_lines(lines[sections[5]:sections[6]])
             self.frequency.read_lines(lines[sections[6]:sections[7]])
             self.collocation.read_lines(lines[sections[7]:sections[8]])
-            self.humidity.read_lines(lines[sections[8]:sections[9]])
+#            self.humidity.read_lines(lines[sections[8]:sections[9]])
 
 
 
@@ -64,6 +64,6 @@ class SiteLog():
             f.write(self.local_ties.string())
             f.write(self.frequency.string())
             f.write(self.collocation.string())
-            f.write(self.humidity.string())
+#            f.write(self.humidity.string())
 
 

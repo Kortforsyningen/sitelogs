@@ -1,19 +1,14 @@
+import sitelogger
 import re
 
-from sitelog.sections import (
-    Section,
-    SectionList,
-)
-
-class MetInstrument(Section):
+class MetInstrument(sitelogger.Section):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
-        self.instrument = ''
-        # self.type = ''
-        # self.header_title = ''
-        # self.subsubtitle = ''
+        self.type = ''
+        #self.header_title = ''
+        #self.subsubtitle = ''
 
     def _template_dict(self):
         data = {
@@ -33,17 +28,6 @@ class MetInstrument(Section):
             "Notes": "(multiple lines)",
         }
         return data
-    @property
-    def instrument(self):
-        return self.instrument
-
-    @instrument.setter
-    def other(self, value):
-        if value = 'Humidity Sensor Model':
-            self.instrument = ' Humidity Sensor Model   :'
-        elif value = 'Pressure Sensor Model':
-            self.instrument = ' Pressure Sensor Model   :'
-        #CONTINUUEEEE
 
     @property
     def other(self):
@@ -87,15 +71,15 @@ class MetInstrument(Section):
 
 
     def string(self):
-        if re.match(r'^8\.5\.[\dx]', self.subtitle):
+        if self.title == 5: #re.match(r'^8\.5\.[\dx]+.+:$', self.subtitle[0]):
             section_text = f"""
-8{self.subtitle}{self.title}
+8.{self.title} {self.other}
     """
         else:
             section_text = f"""
-8.{self.subtitle}{self.title}
-       Manufacturer           :
-       Serial Number          : {self.serial_number}
+8.{self.subsubtitle}.{self.title} {self.header_title} {self.header_val}
+       Manufacturer           : 
+       Serial Number          : 
        Data Sampling Interval : (sec)
        Accuracy               : (hPa)
        Height Diff to Ant     : (m)
@@ -107,15 +91,14 @@ class MetInstrument(Section):
 
 
 
-class Meterological(SectionList):
+class Meteorological(sitelogger.SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
         self.subsection_type = MetInstrument
-        # self.subsubtitle = ''
-        # self.header_title = ''
-        self.subsection_type = MetInstrument
         self.section_type = 'subsubsectionheader'
+        #self.subsubtitle = ''
+        self.header_title = ''
 
 
     def _template_dict(self):
@@ -145,31 +128,31 @@ class Meterological(SectionList):
 """
         if self._subsections:
             for subsection in self._subsections:
-                section_text += subsection.string()
+                section_text += subsection.string() 
         else:
             # subsubtitles = ['8.1.x Humidity Sensor Model   :', '8.2.x Pressure Sensor Model   :', '8.3.x Temp. Sensor Model      :', '8.4.x Water Vapor Radiometer  :', '8.5.x Other Instrumentation   :']
             # for subsubtitle in subsubtitles:
-            s = self.subsection_type()
-            s.subsubtitle = [self.subsubtitle]
-            s.header_title = [self.header_title]
+            s = eval(self.subsection_type)()
+            s.subsubtitle = self.subsubtitle
+            s.header_title = self.header_title
             section_text += s.string()
         return section_text
 
-# class Humidity(Meterological):
-#     def __init__(self):
-#         self.type = 'Humidity Sensor Model'
-#         self.header_title = 'Humidity Sensor Model   :'
-#         self.subsubtitle = 1
-#         super().__init__()
+class Humidity(MetInstrument):
+    def __init__(self):
+        self.type = 'Humidity Sensor Model'
+        self.header_title = 'Humidity Sensor Model   :'
+        #self.subsubtitle = 1
+        super().__init__()
 
-# class Pressure(Meterological):
+# class Pressure(Meteorological):
 #     def __init__(self):
 #         super().__init__()
 #         self.type = 'Pressure Sensor Model'
 #         self.header_title = 'Pressure Sensor Model   :'
 #         self.subsubtitle = 2
 
-# class Temp(Meterological):
+# class Temp(Meteorological):
 #     def __init__(self):
 #         super().__init__()
 #         self.type = 'Temp. Sensor Model'

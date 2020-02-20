@@ -3,9 +3,10 @@ import re
 from sitelog.sections import (
         SubSection,
         SectionList,
+        Section,
 )
 
-class GnssReceiver(SubSection):
+class GnssReceiver(Section):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -52,6 +53,8 @@ class GnssReceiver(SubSection):
 
     @firmware.setter
     def firmware(self, value):
+        if len(value) > 11:
+            raise ValueError("Firmware string can not be longer than 11 characters")
         self._data['Firmware Version'] = value
 
     @property

@@ -8,9 +8,10 @@ class Section():
 
     def __init__(self):
         self.title = ''
-        self.subtitle = []
-        self.subsections = []
+        self.subtitle = ''
         self._data = {}
+
+        
 
     def read_lines(self, lines):
         """
@@ -36,18 +37,18 @@ class Section():
 
             if line_type == 'subsectionheader' or line_type == 'subsubsectionheader':
                 if line_type == 'subsectionheader':
-                    self.subtitle.append(re.sub(r'\s.*','',line))
+                    self.subtitle = re.sub(r'\s.*','',line)
                 else:
-                    self.subtitle.append(re.findall(r'^.*:',line)[0])
+                    self.subtitle = re.sub(r'^[\d{1,2}\.]|\s.*','',line)
+                    self.title = re.findall(r'\s.*:',line)[0]
                 line = re.sub(r'^[\d{1,2}\.]+[\dx]{1,2}','',line)
                 (key, value) = [s.strip() for s in line.split(' : ')]
                 self._data[key] = value
 
-class SectionList(Section):
+class SectionList():
 #class for sections with subsections
     def __init__(self):
-        self.subsubtitle = ''
-        super().__init__()
+        #super().__init__()
         self._subsections = []
         self.subsection_type = None
         self.section_type = ''
@@ -75,14 +76,15 @@ class SectionList(Section):
         for sec_no, subsection in enumerate(sections):
             s = self.subsection_type()
             s.title = sec_no+1
-            if self.section_type == 'subsubsectionheader':
-                s.subsubtitle == self.subsubtitle
-                s.header_title == 'Humidity Sensor Model   :'
+            # if self.section_type == 'subsubsectionheader':
+            #     s.subsubtitle == self.subsubtitle
+            #     s.header_title == 'Humidity Sensor Model   :'
 
             if subsection == sections[-1]:
-                s.read_lines(lines[subsection:])
+                s.read_lines(lines[subsection:]) 
             else:
                 s.read_lines(lines[subsection:sections[sec_no+1]])
+
             self._subsections.append(s)
 
 class SubSection(Section):

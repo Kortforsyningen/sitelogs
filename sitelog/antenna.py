@@ -9,7 +9,6 @@ class AntennaType(SubSection):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
-#        self.number = None
 
     def _template_dict(self):
         data = {
