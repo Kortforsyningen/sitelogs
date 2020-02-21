@@ -32,7 +32,7 @@ class Tie(SubSection):
     def string(self):
 
         section_text = f"""
-5.{self.title}  Tied Marker Name         :
+5.{self.subtitle}  Tied Marker Name         :
      Tied Marker Usage        : (SLR/VLBI/LOCAL CONTROL/FOOTPRINT/etc)
      Tied Marker CDP Number   : (A4)
      Tied Marker DOMES Number : (A9)
@@ -83,6 +83,6 @@ class LocalTies(SectionList):
                 section_text += subsection.string()
         else:
             s = Tie()
-            s.subtitle = ['5.x']
+            s.subtitle = 'x'
             section_text += s.string()
         return section_text

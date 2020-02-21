@@ -31,3 +31,4 @@ from .siteidentification import *
 from .sitelocation import *
 from .sitelogger import *
 from .surveyedties import *
+from .meterologicalinstruments import *

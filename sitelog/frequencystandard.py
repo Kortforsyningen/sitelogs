@@ -23,7 +23,7 @@ class Frequency(SubSection):
     def string(self):
 
         section_text = f"""
-6.{self.title}  Standard Type            : (INTERNAL or EXTERNAL H-MASER/CESIUM/etc)
+6.{self.subtitle}  Standard Type            : (INTERNAL or EXTERNAL H-MASER/CESIUM/etc)
        Input Frequency        : (if external)
        Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
        Notes                  : (multiple lines)
@@ -58,6 +58,6 @@ class FrequencyStandard(SectionList):
                 section_text += subsection.string()
         else:
             s = Frequency()
-            s.title = '6.x'
+            s.subtitle = 'x'
             section_text += s.string()
         return section_text

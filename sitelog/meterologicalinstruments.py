@@ -1,8 +1,9 @@
 import re
 
 from sitelog.sections import (
-    Section,
-    SectionList,
+        SubSection,
+        SectionList,
+        Section,
 )
 
 class MetInstrument(Section):
@@ -11,17 +12,12 @@ class MetInstrument(Section):
         self._data = self._template_dict()
         self.number = None
         self.instrument = ''
-        # self.type = ''
-        # self.header_title = ''
-        # self.subsubtitle = ''
+        self.subsubtitle = ''
+        self.title = ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :'
 
     def _template_dict(self):
         data = {
-            "Other Instrumentation": "",
-            "Water Vapor Radiometer": "",
-            "Temp. Sensor Model": "",
-            "Pressure Sensor Model": "",
-            "Humidity Sensor Model": "",
+            "Model": "",
             "Manufacturer": "",
             "Serial Number": "",
             "Data Sampling Interval": "(sec)",
@@ -38,12 +34,26 @@ class MetInstrument(Section):
         return self.instrument
 
     @instrument.setter
-    def other(self, value):
-        if value = 'Humidity Sensor Model':
-            self.instrument = ' Humidity Sensor Model   :'
-        elif value = 'Pressure Sensor Model':
-            self.instrument = ' Pressure Sensor Model   :'
-        #CONTINUUEEEE
+    def instrument(self, value):
+        if value == 'Humidity Sensor Model':
+            self.title = ' Humidity Sensor Model   :'
+            self.subtitle = '1.'
+        elif value == 'Pressure Sensor Model':
+            self.title = ' Pressure Sensor Model   :'
+            self.subtitle = '2.'
+        elif value == 'Temp. Sensor Model':
+            self.title = ' Temp. Sensor Model      :'
+            self.subtitle = '3.'
+        elif value == 'Water Vapor Radiometer':
+            self.title = ' Water Vapor Radiometer  :'
+            self.subtitle = '4.'
+        elif value == 'Other Instrumentation':
+            self.title = ' Other Instrumentation   :'
+            self.subtitle = '5.'
+        else:
+            self.subtitle = 'x.'
+
+
 
     @property
     def other(self):
@@ -54,12 +64,12 @@ class MetInstrument(Section):
         self._data['Other Instrumentation'] = value
 
     @property
-    def header_val(self):
-        return self._data['Pressure Sensor Model'] #skal kunne variere
+    def model(self):
+        return self._data['Model'] 
 
-    @header_val.setter
-    def header_val(self, value):
-        self._data['Pressure Sensor Model'] = value
+    @model.setter
+    def model(self, value):
+        self._data['Model'] = value
 
     @property
     def manufacturer(self):
@@ -87,13 +97,13 @@ class MetInstrument(Section):
 
 
     def string(self):
-        if re.match(r'^8\.5\.[\dx]', self.subtitle):
+        if self.subtitle == '5.':
             section_text = f"""
-8{self.subtitle}{self.title}
+8.{self.subtitle}{self.subsubtitle}{self.title} {self.other}
     """
         else:
             section_text = f"""
-8.{self.subtitle}{self.title}
+8.{self.subtitle}{self.subsubtitle}{self.title} {self.model}
        Manufacturer           :
        Serial Number          : {self.serial_number}
        Data Sampling Interval : (sec)
@@ -111,20 +121,14 @@ class Meterological(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
-        self.subsection_type = MetInstrument
-        # self.subsubtitle = ''
-        # self.header_title = ''
+        self.list_subtitles = []
         self.subsection_type = MetInstrument
         self.section_type = 'subsubsectionheader'
 
 
     def _template_dict(self):
         data = {
-            "Other Instrumentation": "",
-            "Water Vapor Radiometer": "",
-            "Temp. Sensor Model": "",
-            "Pressure Sensor Model": "",
-            "Humidity Sensor Model": "",
+            "Model": "",
             "Manufacturer": "",
             "Serial Number": "",
             "Data Sampling Interval": "(sec)",
@@ -145,33 +149,19 @@ class Meterological(SectionList):
 """
         if self._subsections:
             for subsection in self._subsections:
+                self.list_subtitles.append(subsection.subtitle)
+                if subsection.title == ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :':#hvis intet eller ugyldigt instrument er givet
+                    subsection.subtitle = 'x.'
+                if subsection.subtitle == 'x.':
+                    subsection.subsubtitle = 'x'
+                else:
+                    subsection.subsubtitle = self.list_subtitles.count(subsection.subtitle)
                 section_text += subsection.string()
         else:
-            # subsubtitles = ['8.1.x Humidity Sensor Model   :', '8.2.x Pressure Sensor Model   :', '8.3.x Temp. Sensor Model      :', '8.4.x Water Vapor Radiometer  :', '8.5.x Other Instrumentation   :']
-            # for subsubtitle in subsubtitles:
             s = self.subsection_type()
-            s.subsubtitle = [self.subsubtitle]
-            s.header_title = [self.header_title]
+            s.title = ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :'
+            s.subsubtitle = 'x'
+            s.subtitle = 'x.'
             section_text += s.string()
         return section_text
 
-# class Humidity(Meterological):
-#     def __init__(self):
-#         self.type = 'Humidity Sensor Model'
-#         self.header_title = 'Humidity Sensor Model   :'
-#         self.subsubtitle = 1
-#         super().__init__()
-
-# class Pressure(Meterological):
-#     def __init__(self):
-#         super().__init__()
-#         self.type = 'Pressure Sensor Model'
-#         self.header_title = 'Pressure Sensor Model   :'
-#         self.subsubtitle = 2
-
-# class Temp(Meterological):
-#     def __init__(self):
-#         super().__init__()
-#         self.type = 'Temp. Sensor Model'
-#         self.header_title = 'Temp. Sensor Model      :'
-#         self.subsubtitle = 1

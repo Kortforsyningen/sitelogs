@@ -39,7 +39,7 @@ class Section():
                 if line_type == 'subsectionheader':
                     self.subtitle = re.sub(r'\s.*','',line)
                 else:
-                    self.subtitle = re.sub(r'^[\d{1,2}\.]|\s.*','',line)
+                    self.subtitle = re.sub(r'^\d{1,2}\.|[\d{1,2}x]\s.*','',line)
                     self.title = re.findall(r'\s.*:',line)[0]
                 line = re.sub(r'^[\d{1,2}\.]+[\dx]{1,2}','',line)
                 (key, value) = [s.strip() for s in line.split(' : ')]
@@ -59,12 +59,13 @@ class SectionList():
 
     def __setitem__(self, index, value):
         try:
-            value.title = index+1
+            value.subtitle = index+1
             self._subsections[index] = value
         except IndexError:
             if index == len(self._subsections):
-                value.title = index+1
+                value.subtitle = index+1
                 self._subsections.append(value)
+
 
     def read_lines(self, lines):
         sections = []
@@ -75,7 +76,7 @@ class SectionList():
 
         for sec_no, subsection in enumerate(sections):
             s = self.subsection_type()
-            s.title = sec_no+1
+            s.subtitle = sec_no+1
             # if self.section_type == 'subsubsectionheader':
             #     s.subsubtitle == self.subsubtitle
             #     s.header_title == 'Humidity Sensor Model   :'

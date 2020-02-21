@@ -76,7 +76,7 @@ class GnssReceiver(Section):
     def string(self):
 
         section_text = f"""
-3.{self.title}  Receiver Type            : {self.receiver_type}
+3.{self.subtitle}  Receiver Type            : {self.receiver_type}
      Satellite System         : {self.sat_sys}
      Serial Number            : (A20, but note the first A5 is used in SINEX)
      Firmware Version         : {self.firmware}
@@ -121,6 +121,6 @@ class GNSS(SectionList):
                 section_text += subsection.string()
         else:
             s = GnssReceiver()
-            s.title = 'x'
+            s.subtitle = 'x'
             section_text += s.string()
         return section_text

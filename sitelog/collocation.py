@@ -23,7 +23,7 @@ class CollocationInstrument(SubSection):
     def string(self):
 
         section_text = f"""
-7.{self.title}  Instrumentation Type     : (GPS/GLONASS/DORIS/PRARE/SLR/VLBI/TIME/etc)
+7.{self.subtitle}  Instrumentation Type     : (GPS/GLONASS/DORIS/PRARE/SLR/VLBI/TIME/etc)
        Status                 : (PERMANENT/MOBILE)
        Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
        Notes                  : (multiple lines)
@@ -58,7 +58,7 @@ class Collocation(SectionList):
                 section_text += subsection.string()
         else:
             s = CollocationInstrument()
-            s.title = 'x'
+            s.subtitle = 'x'
             section_text += s.string()
         return section_text
 

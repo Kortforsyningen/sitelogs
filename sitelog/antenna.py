@@ -57,7 +57,7 @@ class AntennaType(SubSection):
     def string(self):
 
         section_text = f"""
-4.{self.title}  Antenna Type             : {self.antenna_type}
+4.{self.subtitle}  Antenna Type             : {self.antenna_type}
      Serial Number            : {self.serial_number}
      Antenna Reference Point  : (BPA/BCR/XXX from "antenna.gra"; see instr.)
      Marker->ARP Up Ecc. (m)  : (F8.4)
@@ -112,6 +112,6 @@ class Antenna(SectionList):
                 section_text += subsection.string()
         else:
             s = AntennaType()
-            s.title = 'x'
+            s.subtitle = 'x'
             section_text += s.string()
         return section_text
