@@ -2,6 +2,7 @@ from sitelog import (
     SiteLog,
     GnssReceiver,
     MetInstrument,
+    SensorType,
 )
 
 if __name__ == "__main__":
@@ -28,9 +29,16 @@ if __name__ == "__main__":
     log2.gnss[1].receiver_type = 'Receiver 2'
     log2.meteorological[0] = MetInstrument()
     log2.meteorological[1] = MetInstrument()
-    log2.meteorological[1].model = 'unspec.'
+    log2.meteorological[2] = MetInstrument()
+    log2.meteorological[3] = MetInstrument()
+    log2.meteorological[1].model = 'second.'
+    #log2.meteorological[0].instrument = SensorType.HUMIDITY
     log2.meteorological[0].instrument = 'Humidity Sensor Model'
+    log2.meteorological[2].instrument = 'Water Vapor Radiometer'
+    log2.meteorological[3].instrument = 'Humidity Sensor Model'
     log2.meteorological[0].model = 'first'
+    log2.meteorological[2].model = 'third'
+    log2.meteorological[3].model = 'fourth'
     # Det ville gøre det lettere at bruge koden hvis man kunne gøre sådan her:
     #
     #  log2.gnss[0] = GnssReceiver(

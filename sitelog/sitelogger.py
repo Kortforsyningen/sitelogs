@@ -11,7 +11,7 @@ import sitelog.antenna as antenna
 import sitelog.surveyedties as surveyedties
 import sitelog.frequencystandard as frequencystandard
 import sitelog.collocation as collocation
-import sitelog.meterologicalinstruments as meterologicalinstruments
+import sitelog.meteorologicalinstruments as meteorologicalinstruments
 
 
 class SiteLog():
@@ -28,7 +28,7 @@ class SiteLog():
         self.local_ties = surveyedties.LocalTies()
         self.frequency = frequencystandard.FrequencyStandard()
         self.collocation = collocation.Collocation()
-        self.meteorological = meterologicalinstruments.Meterological()
+        self.meteorological = meteorologicalinstruments.Meteorological()
         if sitelogfile is not None:
             self._read()
 

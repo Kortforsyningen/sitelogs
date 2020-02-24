@@ -1,10 +1,21 @@
 import re
+from enum import Enum
+
+class SensorType(Enum):
+    HUMIDITY = "Humidity Sensor Model"
+    PRESSURE = "Pressure Sensor Model"
+    TEMPERATURE = "Temp. Sensor Model"
+    WATERVAPOR = "Water Vapor Radiometer"
+    OTHER = "Other Instrumentation"
+
 
 from sitelog.sections import (
         SubSection,
         SectionList,
         Section,
 )
+
+gen_title = ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :'
 
 class MetInstrument(Section):
     def __init__(self):
@@ -13,7 +24,7 @@ class MetInstrument(Section):
         self.number = None
         self.instrument = ''
         self.subsubtitle = ''
-        self.title = ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :'
+        self.title = gen_title
 
     def _template_dict(self):
         data = {
@@ -21,7 +32,7 @@ class MetInstrument(Section):
             "Manufacturer": "",
             "Serial Number": "",
             "Data Sampling Interval": "(sec)",
-            f"Accuracy (% rel h)": f"(% rel h)",
+            "Accuracy (% rel h)": "(% rel h)",
             "Aspiration": "(UNASPIRATED/NATURAL/FAN/etc)",
             "Height Diff to Ant": "(m)",
             "Calibration date": "(CCYY-MM-DD)",
@@ -52,6 +63,8 @@ class MetInstrument(Section):
             self.subtitle = '5.'
         else:
             self.subtitle = 'x.'
+
+
 
 
 
@@ -95,6 +108,47 @@ class MetInstrument(Section):
     def data_interval(self, value):
         self._data['Data Sampling Interval'] = value
 
+    @property
+    def accuracy(self):
+        return self._data[f"Accuracy (% rel h)"]
+
+    @accuracy.setter
+    def accuracy(self, value):
+        self._data[f"Accuracy (% rel h)"] = value
+
+    @property
+    def height_diff(self):
+        return self._data['Height Diff to Ant']
+
+    @height_diff.setter
+    def height_diff(self, value):
+        self._data['Height Diff to Ant'] = value
+
+    @property
+    def calibration_date(self):
+        return self._data['Calibration date']
+
+    @calibration_date.setter
+    def calibration_date(self, value):
+        if not re.match(r'^\d{4}\-\d\d\-\d\d', value):
+            raise ValueError("Calibration date must be of the format CCYY-MM-DDT")
+        self._data['Calibration date'] = value
+
+    @property
+    def effective_dates(self):
+        return self._data['Effective Dates']
+
+    @effective_dates.setter
+    def effective_dates(self, value):
+        self._data['Effective Dates'] = value
+
+    @property
+    def notes(self):
+        return self._data['Notes']
+
+    @notes.setter
+    def notes(self, value):
+        self._data['Notes'] = value
 
     def string(self):
         if self.subtitle == '5.':
@@ -104,20 +158,20 @@ class MetInstrument(Section):
         else:
             section_text = f"""
 8.{self.subtitle}{self.subsubtitle}{self.title} {self.model}
-       Manufacturer           :
+       Manufacturer           : {self.manufacturer}
        Serial Number          : {self.serial_number}
-       Data Sampling Interval : (sec)
-       Accuracy               : (hPa)
-       Height Diff to Ant     : (m)
-       Calibration date       : (CCYY-MM-DD)
-       Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
-       Notes                  : (multiple lines)
+       Data Sampling Interval : {self.data_interval}
+       Accuracy (% rel h)     : {self.accuracy}
+       Height Diff to Ant     : {self.height_diff}
+       Calibration date       : {self.calibration_date}
+       Effective Dates        : {self.effective_dates}
+       Notes                  : {self.notes}
     """
         return section_text
 
 
 
-class Meterological(SectionList):
+class Meteorological(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
@@ -132,7 +186,7 @@ class Meterological(SectionList):
             "Manufacturer": "",
             "Serial Number": "",
             "Data Sampling Interval": "(sec)",
-            f"Accuracy (% rel h)": f"(% rel h)",
+            "Accuracy (% rel h)": "(% rel h)",
             "Aspiration": "(UNASPIRATED/NATURAL/FAN/etc)",
             "Height Diff to Ant": "(m)",
             "Calibration date": "(CCYY-MM-DD)",
@@ -148,9 +202,11 @@ class Meterological(SectionList):
 8.   Meteorological Instrumentation
 """
         if self._subsections:
+            self._subsections = sorted(self._subsections, key = lambda x: x.subtitle)
             for subsection in self._subsections:
                 self.list_subtitles.append(subsection.subtitle)
-                if subsection.title == ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :':#hvis intet eller ugyldigt instrument er givet
+                #hvis intet eller ugyldigt instrument er givet
+                if subsection.title == gen_title:
                     subsection.subtitle = 'x.'
                 if subsection.subtitle == 'x.':
                     subsection.subsubtitle = 'x'
@@ -159,7 +215,7 @@ class Meterological(SectionList):
                 section_text += subsection.string()
         else:
             s = self.subsection_type()
-            s.title = ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :'
+            s.title = gen_title
             s.subsubtitle = 'x'
             s.subtitle = 'x.'
             section_text += s.string()

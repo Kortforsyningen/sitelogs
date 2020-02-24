@@ -20,13 +20,45 @@ class Frequency(SubSection):
         }
         return data
 
+    @property
+    def standard_type(self):
+        return self._data['Standard Type']
+
+    @standard_type.setter
+    def standard_type(self, value):
+        self._data['Standard Type'] = value
+
+    @property
+    def input_freq(self):
+        return self._data['Input Frequency']
+
+    @input_freq.setter
+    def input_freq(self, value):
+        self._data['Input Frequency'] = value
+
+    @property
+    def effective_dates(self):
+        return self._data['Effective Dates']
+
+    @effective_dates.setter
+    def effective_dates(self, value):
+        self._data['Effective Dates'] = value
+
+    @property
+    def notes(self):
+        return self._data['Notes']
+
+    @notes.setter
+    def notes(self, value):
+        self._data['Notes'] = value
+
     def string(self):
 
         section_text = f"""
-6.{self.subtitle}  Standard Type            : (INTERNAL or EXTERNAL H-MASER/CESIUM/etc)
-       Input Frequency        : (if external)
-       Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
-       Notes                  : (multiple lines)
+6.{self.subtitle}  Standard Type            : {self.standard_type}
+       Input Frequency        : {self.input_freq}
+       Effective Dates        : {self.effective_dates}
+       Notes                  : {self.notes}
 """
         return section_text
 

@@ -1,6 +1,9 @@
 import re
 
 def _determine_line_type(line):
+    """
+    Determine which type a line is...
+    """
     if line.strip() == '':
         line_type = 'blank'
     elif re.match(r'^\d{1,2}\.\s', line):
@@ -31,4 +34,4 @@ from .siteidentification import *
 from .sitelocation import *
 from .sitelogger import *
 from .surveyedties import *
-from .meterologicalinstruments import *
+from .meteorologicalinstruments import *

@@ -46,6 +46,16 @@ class GnssReceiver(Section):
     def sat_sys(self, value):
         self._data['Satellite System'] = value
 
+    @property
+    def serial(self):
+        return self._data['Serial Number']
+
+    @serial.setter
+    def serial(self, value):
+        if not len(value) < 20:
+            raise ValueError("Serial Number must be no longer than 20 characters")
+        self._data['Serial Number'] = value
+
 
     @property
     def firmware(self):
@@ -66,6 +76,34 @@ class GnssReceiver(Section):
         self._data['Elevation Cutoff Settingn'] = value
 
     @property
+    def date_installed(self):
+        return self._data['Date Installed']
+
+    @date_installed.setter
+    def date_installed(self, value):
+        if not re.match(r'^\d{4}\-\d\d\-\d\d', value):
+            raise ValueError("Date Installed must be of the format (CCYY-MM-DDThh:mmZ)")
+        self._data['Date Installed'] = value
+
+    @property
+    def date_removed(self):
+        return self._data['Date Removed']
+
+    @date_removed.setter
+    def date_removed(self, value):
+        if not re.match(r'^\d{4}\-\d\d\-\d\d', value):
+            raise ValueError("Date Removed must be of the format (CCYY-MM-DDThh:mmZ)")
+        self._data['Date Removed'] = value
+
+    @property
+    def temperature(self):
+        return self._data['Temperature Stabiliz.']
+
+    @temperature.setter
+    def temperature(self, value):
+        self._data['Temperature Stabiliz.'] = value
+
+    @property
     def additional(self):
         return self._data['Additional Information']
 
@@ -78,12 +116,12 @@ class GnssReceiver(Section):
         section_text = f"""
 3.{self.subtitle}  Receiver Type            : {self.receiver_type}
      Satellite System         : {self.sat_sys}
-     Serial Number            : (A20, but note the first A5 is used in SINEX)
+     Serial Number            : {self.serial}
      Firmware Version         : {self.firmware}
      Elevation Cutoff Setting : {self.cutoff}
-     Date Installed           : (CCYY-MM-DDThh:mmZ)
-     Date Removed             : (CCYY-MM-DDThh:mmZ)
-     Temperature Stabiliz.    : (none or tolerance in degrees C)
+     Date Installed           : {self.date_installed}
+     Date Removed             : {self.date_removed}
+     Temperature Stabiliz.    : {self.temperature}
      Additional Information   : {self.additional}
 
 """

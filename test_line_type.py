@@ -54,7 +54,7 @@ class TestLineType(unittest.TestCase):
             'Antenna Type': 'Leica',
             'Serial Number': '1111122'
         }
-        subtitle = '.3.x'
+        subtitle = '3.'
         title = '  Antenna Type             :'
         sec.read_lines(lines)
         self.assertEqual(sec._data, _data)

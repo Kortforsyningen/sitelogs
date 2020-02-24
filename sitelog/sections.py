@@ -3,8 +3,8 @@ import re
 from sitelog import _determine_line_type
 
 class Section():
-    #TODO: Handle subsections
-    #TODO: Handle subsubsections
+    #TODO: sections 9, 10, 11, 12, 13
+    #TODO: print multiple lines
 
     def __init__(self):
         self.title = ''
@@ -44,11 +44,13 @@ class Section():
                 line = re.sub(r'^[\d{1,2}\.]+[\dx]{1,2}','',line)
                 (key, value) = [s.strip() for s in line.split(' : ')]
                 self._data[key] = value
+                previous_key = key
 
 class SectionList():
-#class for sections with subsections
+    """
+    class for sections with subsections
+    """
     def __init__(self):
-        #super().__init__()
         self._subsections = []
         self.subsection_type = None
         self.section_type = ''
@@ -63,7 +65,10 @@ class SectionList():
             self._subsections[index] = value
         except IndexError:
             if index == len(self._subsections):
-                value.subtitle = index+1
+                if self._subsections == 'subsectionheader':
+                    value.subtitle = index+1
+                else:
+                    value.subtitle = 'x.'
                 self._subsections.append(value)
 
 
@@ -77,9 +82,6 @@ class SectionList():
         for sec_no, subsection in enumerate(sections):
             s = self.subsection_type()
             s.subtitle = sec_no+1
-            # if self.section_type == 'subsubsectionheader':
-            #     s.subsubtitle == self.subsubtitle
-            #     s.header_title == 'Humidity Sensor Model   :'
 
             if subsection == sections[-1]:
                 s.read_lines(lines[subsection:]) 
