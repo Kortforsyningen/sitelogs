@@ -81,7 +81,7 @@ class TestLineType(unittest.TestCase):
             "Date Removed": "(CCYY-MM-DDThh:mmZ)",
             "Additional Information": "(multiple lines)",
         }
-        subtitle = '4.3'
+        subtitle = 1
         list_sec.subsection_type = AntennaType
         list_sec.section_type = 'subsectionheader'
         list_sec.read_lines(lines)
