@@ -14,15 +14,16 @@ from sitelog.sections import (
         SectionList,
         Section,
 )
+from sitelog import _format_string
 
-gen_title = ' Humidity/Pressure/Temp.\n      Sensor Model, Water Vapor\n      Radiometer or Other     :'
+gen_title = 'Humidity/Pressure/Temp. Sensor Model, Water Vapor Radiometer or Other'
 
 class MetInstrument(Section):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
-        self.instrument = ''
+#        self.instrument = SensorType
         self.subsubtitle = ''
         self.title = gen_title
 
@@ -46,27 +47,19 @@ class MetInstrument(Section):
 
     @instrument.setter
     def instrument(self, value):
-        if value == 'Humidity Sensor Model':
-            self.title = ' Humidity Sensor Model   :'
+        self.title = value.value
+        if value.value == 'Humidity Sensor Model':
             self.subtitle = '1.'
-        elif value == 'Pressure Sensor Model':
-            self.title = ' Pressure Sensor Model   :'
+        elif value.value == 'Pressure Sensor Model':
             self.subtitle = '2.'
-        elif value == 'Temp. Sensor Model':
-            self.title = ' Temp. Sensor Model      :'
+        elif value.value == 'Temp. Sensor Model':
             self.subtitle = '3.'
-        elif value == 'Water Vapor Radiometer':
-            self.title = ' Water Vapor Radiometer  :'
+        elif value.value == 'Water Vapor Radiometer':
             self.subtitle = '4.'
-        elif value == 'Other Instrumentation':
-            self.title = ' Other Instrumentation   :'
+        elif value.value == 'Other Instrumentation':
             self.subtitle = '5.'
         else:
             self.subtitle = 'x.'
-
-
-
-
 
     @property
     def other(self):
@@ -151,13 +144,15 @@ class MetInstrument(Section):
         self._data['Notes'] = value
 
     def string(self):
+        self.subsubtitle = _format_string(self.subsubtitle,'subsubsecnr')
+        self.title = _format_string(self.title,'subsubsectitle')
         if self.subtitle == '5.':
             section_text = f"""
-8.{self.subtitle}{self.subsubtitle}{self.title} {self.other}
+{self.subsubtitle}{self.title}{self.other}
     """
         else:
             section_text = f"""
-8.{self.subtitle}{self.subsubtitle}{self.title} {self.model}
+{self.subsubtitle}{self.title}{self.model}
        Manufacturer           : {self.manufacturer}
        Serial Number          : {self.serial_number}
        Data Sampling Interval : {self.data_interval}
@@ -211,7 +206,8 @@ class Meteorological(SectionList):
                 if subsection.subtitle == 'x.':
                     subsection.subsubtitle = 'x'
                 else:
-                    subsection.subsubtitle = self.list_subtitles.count(subsection.subtitle)
+                    subsection.subsubtitle = str(self.list_subtitles.count(subsection.subtitle))
+                subsection.subsubtitle = "8."+subsection.subtitle+subsection.subsubtitle
                 section_text += subsection.string()
         else:
             s = self.subsection_type()

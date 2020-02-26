@@ -1,4 +1,5 @@
 import re
+import textwrap
 
 def _determine_line_type(line):
     """
@@ -23,6 +24,69 @@ def _determine_line_type(line):
         line_type = 'freeform'
 
     return line_type
+
+def _format_string(line, line_type):
+    """
+    formatting lines to sitelog format 
+
+    options:
+    'sectiontitle'
+    'sectionnr'
+    'subsectitle'
+    'subsubsecnr'
+    'subsubsectitle'
+    'mainkey'
+    'subkey'
+    'multilinevalue'
+    """
+    formatted_string = ''
+
+    if line_type == 'sectiontitle':
+        formatted_string = line
+
+    if line_type == 'sectionnr':
+        formatted_string = "{:6}".format(line)
+
+    if line_type == 'subsectitle':
+        formatted_string = "{:24}{:2}".format(line,":")
+
+    if line_type == 'subsubsecnr':
+        formatted_string = "{:7}".format(line)
+
+    if line_type == 'subsubsectitle':
+        if len(line) < 23:
+            formatted_string = "{:23}{:2}".format(line,":")
+        else:
+            lines = textwrap.wrap(line, width=23)
+            for i, l in enumerate(lines):
+                if i == 0:
+                    formatted_l = "{:23}{:2}".format(l,":")
+                else:
+                    formatted_l = "\n{:7}{:23}{:2}".format("",l,":")
+                formatted_string += formatted_l
+
+    if line_type == 'mainkey':
+        formatted_string = line.rjust(len(line)+5)
+        formatted_string = "{:30}{:2}".format(formatted_string,":")
+        
+
+    if line_type == 'subkey':
+        formatted_string = line.rjust(len(line)+7)
+        formatted_string = "{:30}{:2}".format(formatted_string,":")
+
+    if line_type == 'multilinevalue':
+        if len(line) < 48:
+            formatted_string = line
+        else:
+            lines = textwrap.wrap(line, width=48)
+            for i, l in enumerate(lines):
+                if i == 0:
+                    formatted_l = l
+                else:
+                    formatted_l = "\n{:>31} ".format(":")+l
+                formatted_string += formatted_l
+
+    return formatted_string
 
 from .antenna import *
 from .collocation import *

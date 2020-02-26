@@ -5,6 +5,7 @@ from sitelog.sections import (
         SectionList,
         Section,
 )
+from sitelog import _format_string
 
 class GnssReceiver(Section):
     def __init__(self):
@@ -112,7 +113,7 @@ class GnssReceiver(Section):
         self._data['Additional Information'] = value
 
     def string(self):
-
+        self.additional = _format_string(self.additional,'multilinevalue')
         section_text = f"""
 3.{self.subtitle}  Receiver Type            : {self.receiver_type}
      Satellite System         : {self.sat_sys}

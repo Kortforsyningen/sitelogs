@@ -32,10 +32,10 @@ if __name__ == "__main__":
     log2.meteorological[2] = MetInstrument()
     log2.meteorological[3] = MetInstrument()
     log2.meteorological[1].model = 'second.'
-    #log2.meteorological[0].instrument = SensorType.HUMIDITY
-    log2.meteorological[0].instrument = 'Humidity Sensor Model'
-    log2.meteorological[2].instrument = 'Water Vapor Radiometer'
-    log2.meteorological[3].instrument = 'Humidity Sensor Model'
+    log2.meteorological[0].instrument = SensorType.HUMIDITY
+#    log2.meteorological[0].instrument = 'Humidity Sensor Model'
+    log2.meteorological[2].instrument = SensorType.WATERVAPOR
+    log2.meteorological[3].instrument = SensorType.HUMIDITY
     log2.meteorological[0].model = 'first'
     log2.meteorological[2].model = 'third'
     log2.meteorological[3].model = 'fourth'

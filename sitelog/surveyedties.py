@@ -4,6 +4,7 @@ from sitelog.sections import (
     SubSection,
     SectionList,
 )
+from sitelog import _format_string
 
 class Tie(SubSection):
     def __init__(self):
@@ -124,7 +125,7 @@ class Tie(SubSection):
         self._data['Additional Information'] = value
 
     def string(self):
-
+        self.additional = _format_string(self.additional,'multilinevalue')
         section_text = f"""
 5.{self.subtitle}  Tied Marker Name         : {self.marker_name}
      Tied Marker Usage        : {self.marker_usage}

@@ -1,5 +1,6 @@
 import re
 from sitelog.sections import Section
+from sitelog import _format_string
 
 class SiteIdentification(Section):
 
@@ -193,7 +194,8 @@ class SiteIdentification(Section):
 
 
     def string(self):
-
+        self.additional = _format_string(self.additional,'multilinevalue')
+        self.distance = _format_string(self.distance,'multilinevalue')
         section_text = f"""
 
 1.   Site Identification of the GNSS Monument

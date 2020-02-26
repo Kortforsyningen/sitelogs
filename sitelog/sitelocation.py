@@ -1,6 +1,7 @@
 import re
 
 from sitelog.sections import Section
+from sitelog import _format_string
 
 class SiteLocation(Section):
 
@@ -136,7 +137,7 @@ class SiteLocation(Section):
         self._data['Additional Information'] = value
 
     def string(self):
-
+        self.additional = _format_string(self.additional,'multilinevalue')
         section_text = f"""
 2.   Site Location Information
 

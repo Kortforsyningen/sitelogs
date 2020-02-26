@@ -4,6 +4,7 @@ from sitelog.sections import (
     SubSection,
     SectionList,
 )
+from sitelog import _format_string
 
 class CollocationInstrument(SubSection):
     def __init__(self):
@@ -53,7 +54,7 @@ class CollocationInstrument(SubSection):
         self._data['Notes'] = value
 
     def string(self):
-
+        self.notes = _format_string(self.notes,'multilinevalue')
         section_text = f"""
 7.{self.subtitle}  Instrumentation Type     : {self.instrumentation_type}
        Status                 : {self.status}

@@ -24,7 +24,7 @@ class Section():
                 continue
 
             if line_type == 'sectionheader':
-                self.title = line.strip()
+                self.title = re.sub(r'^d{1,2}\.','',line).strip()
 
             if line_type == 'key_value':
                 (key, value) = [s.strip() for s in line.split(' : ')]
@@ -37,10 +37,10 @@ class Section():
 
             if line_type == 'subsectionheader' or line_type == 'subsubsectionheader':
                 if line_type == 'subsectionheader':
-                    self.subtitle = re.sub(r'\s.*','',line)
+                    self.subtitle = re.sub(r'^d{1,2}\.|\s.*','',line)
                 else:
                     self.subtitle = re.sub(r'^\d{1,2}\.|[\d{1,2}x]\s.*','',line)
-                    self.title = re.findall(r'\s.*:',line)[0]
+                    self.title = re.sub(r'^[\d{1,2}\.]+[\dx]{1,2}\s*|\s*:.*','',line)
                 line = re.sub(r'^[\d{1,2}\.]+[\dx]{1,2}','',line)
                 (key, value) = [s.strip() for s in line.split(' : ')]
                 self._data[key] = value
@@ -65,7 +65,7 @@ class SectionList():
             self._subsections[index] = value
         except IndexError:
             if index == len(self._subsections):
-                if self._subsections == 'subsectionheader':
+                if self.section_type == 'subsectionheader':
                     value.subtitle = index+1
                 else:
                     value.subtitle = 'x.'
@@ -81,12 +81,14 @@ class SectionList():
 
         for sec_no, subsection in enumerate(sections):
             s = self.subsection_type()
-            s.subtitle = sec_no+1
 
             if subsection == sections[-1]:
                 s.read_lines(lines[subsection:]) 
             else:
                 s.read_lines(lines[subsection:sections[sec_no+1]])
+
+            if self.section_type == 'subsectionheader':
+                s.subtitle = sec_no+1
 
             self._subsections.append(s)
 

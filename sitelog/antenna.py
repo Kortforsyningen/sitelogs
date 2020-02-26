@@ -4,6 +4,7 @@ from sitelog.sections import (
     SubSection,
     SectionList,
 )
+from sitelog import _format_string
 
 class AntennaType(SubSection):
     def __init__(self):
@@ -151,7 +152,7 @@ class AntennaType(SubSection):
 
 
     def string(self):
-
+        self.additional = _format_string(self.additional,'multilinevalue')
         section_text = f"""
 4.{self.subtitle}  Antenna Type             : {self.antenna_type}
      Serial Number            : {self.serial_number}

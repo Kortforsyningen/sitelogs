@@ -4,6 +4,7 @@ from sitelog.sections import (
     SubSection,
     SectionList,
 )
+from sitelog import _format_string
 
 class Frequency(SubSection):
     def __init__(self):
@@ -53,7 +54,7 @@ class Frequency(SubSection):
         self._data['Notes'] = value
 
     def string(self):
-
+        self.notes = _format_string(self.notes,'multilinevalue')
         section_text = f"""
 6.{self.subtitle}  Standard Type            : {self.standard_type}
        Input Frequency        : {self.input_freq}
