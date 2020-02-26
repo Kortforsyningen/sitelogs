@@ -1,6 +1,7 @@
 import re
 from enum import Enum
 
+
 class SensorType(Enum):
     HUMIDITY = "Humidity Sensor Model"
     PRESSURE = "Pressure Sensor Model"
@@ -10,21 +11,22 @@ class SensorType(Enum):
 
 
 from sitelog.sections import (
-        SubSection,
-        SectionList,
-        Section,
+    SubSection,
+    SectionList,
+    Section,
 )
 from sitelog import _format_string
 
-gen_title = 'Humidity/Pressure/Temp. Sensor Model, Water Vapor Radiometer or Other'
+gen_title = "Humidity/Pressure/Temp. Sensor Model, Water Vapor Radiometer or Other"
+
 
 class MetInstrument(Section):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
-#        self.instrument = SensorType
-        self.subsubtitle = ''
+        #        self.instrument = SensorType
+        self.subsubtitle = ""
         self.title = gen_title
 
     def _template_dict(self):
@@ -41,6 +43,7 @@ class MetInstrument(Section):
             "Notes": "(multiple lines)",
         }
         return data
+
     @property
     def instrument(self):
         return self.instrument
@@ -48,58 +51,58 @@ class MetInstrument(Section):
     @instrument.setter
     def instrument(self, value):
         self.title = value.value
-        if value.value == 'Humidity Sensor Model':
-            self.subtitle = '1.'
-        elif value.value == 'Pressure Sensor Model':
-            self.subtitle = '2.'
-        elif value.value == 'Temp. Sensor Model':
-            self.subtitle = '3.'
-        elif value.value == 'Water Vapor Radiometer':
-            self.subtitle = '4.'
-        elif value.value == 'Other Instrumentation':
-            self.subtitle = '5.'
+        if value.value == "Humidity Sensor Model":
+            self.subtitle = "1."
+        elif value.value == "Pressure Sensor Model":
+            self.subtitle = "2."
+        elif value.value == "Temp. Sensor Model":
+            self.subtitle = "3."
+        elif value.value == "Water Vapor Radiometer":
+            self.subtitle = "4."
+        elif value.value == "Other Instrumentation":
+            self.subtitle = "5."
         else:
-            self.subtitle = 'x.'
+            self.subtitle = "x."
 
     @property
     def other(self):
-        return self._data['Other Instrumentation']
+        return self._data["Other Instrumentation"]
 
     @other.setter
     def other(self, value):
-        self._data['Other Instrumentation'] = value
+        self._data["Other Instrumentation"] = value
 
     @property
     def model(self):
-        return self._data['Model'] 
+        return self._data["Model"]
 
     @model.setter
     def model(self, value):
-        self._data['Model'] = value
+        self._data["Model"] = value
 
     @property
     def manufacturer(self):
-        return self._data['Manufacturer']
+        return self._data["Manufacturer"]
 
     @manufacturer.setter
     def manufacturer(self, value):
-        self._data['Manufacturer'] = value
+        self._data["Manufacturer"] = value
 
     @property
     def serial_number(self):
-        return self._data['Serial Number']
+        return self._data["Serial Number"]
 
     @serial_number.setter
     def serial_number(self, value):
-        self._data['Serial Number'] = value
+        self._data["Serial Number"] = value
 
     @property
     def data_interval(self):
-        return self._data['Data Sampling Interval']
+        return self._data["Data Sampling Interval"]
 
     @data_interval.setter
     def data_interval(self, value):
-        self._data['Data Sampling Interval'] = value
+        self._data["Data Sampling Interval"] = value
 
     @property
     def accuracy(self):
@@ -111,42 +114,42 @@ class MetInstrument(Section):
 
     @property
     def height_diff(self):
-        return self._data['Height Diff to Ant']
+        return self._data["Height Diff to Ant"]
 
     @height_diff.setter
     def height_diff(self, value):
-        self._data['Height Diff to Ant'] = value
+        self._data["Height Diff to Ant"] = value
 
     @property
     def calibration_date(self):
-        return self._data['Calibration date']
+        return self._data["Calibration date"]
 
     @calibration_date.setter
     def calibration_date(self, value):
-        if not re.match(r'^\d{4}\-\d\d\-\d\d', value):
+        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
             raise ValueError("Calibration date must be of the format CCYY-MM-DDT")
-        self._data['Calibration date'] = value
+        self._data["Calibration date"] = value
 
     @property
     def effective_dates(self):
-        return self._data['Effective Dates']
+        return self._data["Effective Dates"]
 
     @effective_dates.setter
     def effective_dates(self, value):
-        self._data['Effective Dates'] = value
+        self._data["Effective Dates"] = value
 
     @property
     def notes(self):
-        return self._data['Notes']
+        return self._data["Notes"]
 
     @notes.setter
     def notes(self, value):
-        self._data['Notes'] = value
+        self._data["Notes"] = value
 
     def string(self):
-        self.subsubtitle = _format_string(self.subsubtitle,'subsubsecnr')
-        self.title = _format_string(self.title,'subsubsectitle')
-        if self.subtitle == '5.':
+        self.subsubtitle = _format_string(self.subsubtitle, "subsubsecnr")
+        self.title = _format_string(self.title, "subsubsectitle")
+        if self.subtitle == "5.":
             section_text = f"""
 {self.subsubtitle}{self.title}{self.other}
     """
@@ -165,15 +168,13 @@ class MetInstrument(Section):
         return section_text
 
 
-
 class Meteorological(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
         self.list_subtitles = []
         self.subsection_type = MetInstrument
-        self.section_type = 'subsubsectionheader'
-
+        self.section_type = "subsubsectionheader"
 
     def _template_dict(self):
         data = {
@@ -190,30 +191,32 @@ class Meteorological(SectionList):
         }
         return data
 
-
     def string(self):
 
         section_text = f"""
 8.   Meteorological Instrumentation
 """
         if self._subsections:
-            self._subsections = sorted(self._subsections, key = lambda x: x.subtitle)
+            self._subsections = sorted(self._subsections, key=lambda x: x.subtitle)
             for subsection in self._subsections:
                 self.list_subtitles.append(subsection.subtitle)
-                #hvis intet eller ugyldigt instrument er givet
+                # hvis intet eller ugyldigt instrument er givet
                 if subsection.title == gen_title:
-                    subsection.subtitle = 'x.'
-                if subsection.subtitle == 'x.':
-                    subsection.subsubtitle = 'x'
+                    subsection.subtitle = "x."
+                if subsection.subtitle == "x.":
+                    subsection.subsubtitle = "x"
                 else:
-                    subsection.subsubtitle = str(self.list_subtitles.count(subsection.subtitle))
-                subsection.subsubtitle = "8."+subsection.subtitle+subsection.subsubtitle
+                    subsection.subsubtitle = str(
+                        self.list_subtitles.count(subsection.subtitle)
+                    )
+                subsection.subsubtitle = (
+                    "8." + subsection.subtitle + subsection.subsubtitle
+                )
                 section_text += subsection.string()
         else:
             s = self.subsection_type()
             s.title = gen_title
-            s.subsubtitle = 'x'
-            s.subtitle = 'x.'
+            s.subsubtitle = "x"
+            s.subtitle = "x."
             section_text += s.string()
         return section_text
-

@@ -1,20 +1,22 @@
 import re
 
 from sitelog.sections import (
-        SubSection,
-        SectionList,
-        Section,
+    SubSection,
+    SectionList,
+    Section,
 )
 from sitelog import _format_string
+
 
 class GnssReceiver(Section):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
-#        self.subtitle = []
-#        self.title = ''
+        #        self.subtitle = []
+        #        self.title = ''
         self.number = None
- #       self._data['Receiver Type'] = receiver_type
+
+    #       self._data['Receiver Type'] = receiver_type
 
     def _template_dict(self):
         data = {
@@ -30,90 +32,88 @@ class GnssReceiver(Section):
         }
         return data
 
-
     @property
     def receiver_type(self):
-        return self._data['Receiver Type']
+        return self._data["Receiver Type"]
 
     @receiver_type.setter
     def receiver_type(self, value):
-        self._data['Receiver Type'] = value
+        self._data["Receiver Type"] = value
 
     @property
     def sat_sys(self):
-        return self._data['Satellite System']
+        return self._data["Satellite System"]
 
     @sat_sys.setter
     def sat_sys(self, value):
-        self._data['Satellite System'] = value
+        self._data["Satellite System"] = value
 
     @property
     def serial(self):
-        return self._data['Serial Number']
+        return self._data["Serial Number"]
 
     @serial.setter
     def serial(self, value):
         if not len(value) < 20:
             raise ValueError("Serial Number must be no longer than 20 characters")
-        self._data['Serial Number'] = value
-
+        self._data["Serial Number"] = value
 
     @property
     def firmware(self):
-        return self._data['Firmware Version']
+        return self._data["Firmware Version"]
 
     @firmware.setter
     def firmware(self, value):
         if len(value) > 11:
             raise ValueError("Firmware string can not be longer than 11 characters")
-        self._data['Firmware Version'] = value
+        self._data["Firmware Version"] = value
 
     @property
     def cutoff(self):
-        return self._data['Elevation Cutoff Setting']
+        return self._data["Elevation Cutoff Setting"]
 
     @cutoff.setter
     def cutoff(self, value):
-        self._data['Elevation Cutoff Settingn'] = value
+        self._data["Elevation Cutoff Settingn"] = value
 
     @property
     def date_installed(self):
-        return self._data['Date Installed']
+        return self._data["Date Installed"]
 
     @date_installed.setter
     def date_installed(self, value):
-        if not re.match(r'^\d{4}\-\d\d\-\d\d', value):
+        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
             raise ValueError("Date Installed must be of the format (CCYY-MM-DDThh:mmZ)")
-        self._data['Date Installed'] = value
+        self._data["Date Installed"] = value
 
     @property
     def date_removed(self):
-        return self._data['Date Removed']
+        return self._data["Date Removed"]
 
     @date_removed.setter
     def date_removed(self, value):
-        if not re.match(r'^\d{4}\-\d\d\-\d\d', value):
+        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
             raise ValueError("Date Removed must be of the format (CCYY-MM-DDThh:mmZ)")
-        self._data['Date Removed'] = value
+        self._data["Date Removed"] = value
 
     @property
     def temperature(self):
-        return self._data['Temperature Stabiliz.']
+        return self._data["Temperature Stabiliz."]
 
     @temperature.setter
     def temperature(self, value):
-        self._data['Temperature Stabiliz.'] = value
+        self._data["Temperature Stabiliz."] = value
 
     @property
     def additional(self):
-        return self._data['Additional Information']
+        return self._data["Additional Information"]
 
     @additional.setter
     def additional(self, value):
-        self._data['Additional Information'] = value
+        self._data["Additional Information"] = value
 
     def string(self):
-        self.additional = _format_string(self.additional,'multilinevalue')
+        self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
 3.{self.subtitle}  Receiver Type            : {self.receiver_type}
      Satellite System         : {self.sat_sys}
@@ -128,12 +128,13 @@ class GnssReceiver(Section):
 """
         return section_text
 
+
 class GNSS(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict
         self.subsection_type = GnssReceiver
-        self.section_type = 'subsectionheader' #subsection
+        self.section_type = "subsectionheader"  # subsection
 
     def _template_dict(self):
         data = {
@@ -149,7 +150,6 @@ class GNSS(SectionList):
         }
         return data
 
-
     def string(self):
 
         section_text = f"""
@@ -160,6 +160,6 @@ class GNSS(SectionList):
                 section_text += subsection.string()
         else:
             s = GnssReceiver()
-            s.subtitle = 'x'
+            s.subtitle = "x"
             section_text += s.string()
         return section_text

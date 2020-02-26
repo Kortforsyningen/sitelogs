@@ -14,8 +14,7 @@ import sitelog.collocation as collocation
 import sitelog.meteorologicalinstruments as meteorologicalinstruments
 
 
-class SiteLog():
-
+class SiteLog:
     def __init__(self, sitelogfile=None):
 
         self.logfile = sitelogfile
@@ -33,28 +32,26 @@ class SiteLog():
             self._read()
 
     def _read(self):
-        with open(self.logfile, 'r') as sl:
+        with open(self.logfile, "r") as sl:
             lines = sl.read().splitlines()
             sections = []
             for line_no, line in enumerate(lines):
-                if _determine_line_type(line) == 'sectionheader':
+                if _determine_line_type(line) == "sectionheader":
                     sections.append(line_no)
 
-            self.header.code = re.findall(r'\s+([A-Z0-9]{4})', lines[0])[0]
-            self.form.read_lines(lines[sections[0]:sections[1]])
-            self.site_identification.read_lines(lines[sections[1]:sections[2]])
-            self.site_location.read_lines(lines[sections[2]:sections[3]])
-            self.gnss.read_lines(lines[sections[3]:sections[4]])
-            self.antenna.read_lines(lines[sections[4]:sections[5]])
-            self.local_ties.read_lines(lines[sections[5]:sections[6]])
-            self.frequency.read_lines(lines[sections[6]:sections[7]])
-            self.collocation.read_lines(lines[sections[7]:sections[8]])
-            self.meteorological.read_lines(lines[sections[8]:sections[9]])
-
-
+            self.header.code = re.findall(r"\s+([A-Z0-9]{4})", lines[0])[0]
+            self.form.read_lines(lines[sections[0] : sections[1]])
+            self.site_identification.read_lines(lines[sections[1] : sections[2]])
+            self.site_location.read_lines(lines[sections[2] : sections[3]])
+            self.gnss.read_lines(lines[sections[3] : sections[4]])
+            self.antenna.read_lines(lines[sections[4] : sections[5]])
+            self.local_ties.read_lines(lines[sections[5] : sections[6]])
+            self.frequency.read_lines(lines[sections[6] : sections[7]])
+            self.collocation.read_lines(lines[sections[7] : sections[8]])
+            self.meteorological.read_lines(lines[sections[8] : sections[9]])
 
     def write(self, sitelogfile):
-        with open(sitelogfile, 'w') as f:
+        with open(sitelogfile, "w") as f:
             f.write(self.header.string())
             f.write(self.form.string())
             f.write(self.site_identification.string())
@@ -65,5 +62,3 @@ class SiteLog():
             f.write(self.frequency.string())
             f.write(self.collocation.string())
             f.write(self.meteorological.string())
-
-

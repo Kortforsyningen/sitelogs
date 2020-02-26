@@ -9,23 +9,25 @@ from sitelog import (
     Antenna,
 )
 
-class TestLineType(unittest.TestCase):
 
+class TestLineType(unittest.TestCase):
     def test_line_type(self):
-        line = '4.x  Antenna Type             : (A20, from rcvr_ant.tab; see instructions)'
-        line_type = 'subsectionheader'
+        line = (
+            "4.x  Antenna Type             : (A20, from rcvr_ant.tab; see instructions)"
+        )
+        line_type = "subsectionheader"
         self.assertEqual(_determine_line_type(line), line_type)
 
     def test_site_code(self):
-        code = 'AB346'
-        code2 = 'AB'
+        code = "AB346"
+        code2 = "AB"
         site = SiteIdentification()
         with self.assertRaises(ValueError):
             site.site_code = code
             site.site_code = code2
 
     def test_IERS(self):
-        code = 'AB346'
+        code = "AB346"
         site = SiteIdentification()
         with self.assertRaises(ValueError):
             site.IERS_number = code
@@ -33,42 +35,45 @@ class TestLineType(unittest.TestCase):
     def test_bedrock(self):
         site = SiteIdentification()
         with self.assertRaises(ValueError):
-            site.bedrock_type = 'ROCK'
+            site.bedrock_type = "ROCK"
 
     def test_read_lines_subsec(self):
         sec = Section()
-        lines = ['4.x  Antenna Type             : Leica', '     Serial Number            : 1111122']
-        _data = {
-            'Antenna Type': 'Leica',
-            'Serial Number': '1111122'
-        }
-        subtitle = '4.x'
+        lines = [
+            "4.x  Antenna Type             : Leica",
+            "     Serial Number            : 1111122",
+        ]
+        _data = {"Antenna Type": "Leica", "Serial Number": "1111122"}
+        subtitle = "4.x"
         sec.read_lines(lines)
         self.assertEqual(sec._data, _data)
         self.assertEqual(subtitle, sec.subtitle)
 
     def test_read_lines_subsubsec(self):
         sec = Section()
-        lines = ['4.3.x  Antenna Type             : Leica', '     Serial Number            : 1111122']
-        _data = {
-            'Antenna Type': 'Leica',
-            'Serial Number': '1111122'
-        }
-        subtitle = '3.'
-        title = 'Antenna Type'
+        lines = [
+            "4.3.x  Antenna Type             : Leica",
+            "     Serial Number            : 1111122",
+        ]
+        _data = {"Antenna Type": "Leica", "Serial Number": "1111122"}
+        subtitle = "3."
+        title = "Antenna Type"
         sec.read_lines(lines)
         self.assertEqual(sec._data, _data)
         self.assertEqual(subtitle, sec.subtitle)
         self.assertEqual(title, sec.title)
 
-    def test_read_lines_list(self): #
+    def test_read_lines_list(self):  #
         list_sec = SectionList()
 
-        lines = ['4.3  Antenna Type             : Leica', '     Serial Number            : 1111122']
+        lines = [
+            "4.3  Antenna Type             : Leica",
+            "     Serial Number            : 1111122",
+        ]
         _data = {
             "Antenna Type": "Leica",
             "Serial Number": "1111122",
-            "Antenna Reference Point": "(BPA/BCR/XXX from \"antenna.gra\"; see instr.)",
+            "Antenna Reference Point": '(BPA/BCR/XXX from "antenna.gra"; see instr.)',
             "Marker->ARP Up Ecc. (m)": "(F8.4)",
             "Marker->ARP North Ecc(m)": "(F8.4)",
             "Marker->ARP East Ecc(m)": "(F8.4)",
@@ -83,16 +88,19 @@ class TestLineType(unittest.TestCase):
         }
         subtitle = 1
         list_sec.subsection_type = AntennaType
-        list_sec.section_type = 'subsectionheader'
+        list_sec.section_type = "subsectionheader"
         list_sec.read_lines(lines)
-        list_sub_sec =  list_sec._subsections[0]
-        self.assertEqual( _data, list_sub_sec._data)
+        list_sub_sec = list_sec._subsections[0]
+        self.assertEqual(_data, list_sub_sec._data)
         self.assertEqual(subtitle, list_sub_sec.subtitle)
 
-    def test_antenna(self): #
+    def test_antenna(self):  #
         antenna_sec = Antenna()
 
-        lines = ['4.3  Antenna Type             : Leica', '     Serial Number            : 1111122']
+        lines = [
+            "4.3  Antenna Type             : Leica",
+            "     Serial Number            : 1111122",
+        ]
 
         # Note the whitespace after "Radome Serial Number", can be a problem in
         # editors that automatically removes trailing whitespace
@@ -118,9 +126,6 @@ class TestLineType(unittest.TestCase):
         antenna_sec.read_lines(lines)
         self.assertEqual(antenna_text, antenna_sec.string())
 
-    
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -3,8 +3,8 @@ import re
 from sitelog.sections import Section
 from sitelog import _format_string
 
-class SiteLocation(Section):
 
+class SiteLocation(Section):
     def _template_dict(self):
 
         data = {
@@ -12,7 +12,7 @@ class SiteLocation(Section):
             "State or Province": "",
             "Country": "",
             "Tectonic Plate": "",
-            "Approximate Position (ITRF)" : "",
+            "Approximate Position (ITRF)": "",
             "X coordinate (m)": "",
             "Y coordinate (m)": "",
             "Z coordinate (m)": "",
@@ -28,116 +28,115 @@ class SiteLocation(Section):
 
     @property
     def city(self):
-        return self._data['City or Town']
+        return self._data["City or Town"]
 
     @city.setter
     def city(self, value):
-        self._data['City or Town'] = value
+        self._data["City or Town"] = value
 
     @property
     def state(self):
-        return self._data['State or Province']
+        return self._data["State or Province"]
 
     @state.setter
     def state(self, value):
-        self._data['State or Province'] = value
+        self._data["State or Province"] = value
 
     @property
     def country(self):
-        return self._data['Country']
+        return self._data["Country"]
 
     @country.setter
     def country(self, value):
-        self._data['Country'] = value
+        self._data["Country"] = value
 
     @property
     def tectonic_plate(self):
-        return self._data['Tectonic Plate']
+        return self._data["Tectonic Plate"]
 
     @tectonic_plate.setter
     def tectonic_plate(self, value):
-        self._data['Tectonic Plate'] = value
+        self._data["Tectonic Plate"] = value
 
     @property
     def x(self):
-        value = self._data['X coordinate (m)']
-        if  re.match(r'^[\d\.]+$', value):
-            value = '{:8.1f}'.format(float(value))
+        value = self._data["X coordinate (m)"]
+        if re.match(r"^[\d\.]+$", value):
+            value = "{:8.1f}".format(float(value))
             value = f"{float(value):8.1f}"
-        elif re.match(r'^[\d\.]+\s*[^0-9.]+$', value):
-            value = '{:8.1f}'.format(float(re.sub(r'\s*[^0-9.]+', '', value)))
+        elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+            value = "{:8.1f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
         return value
 
     @x.setter
     def x(self, value):
-        self._data['X coordinate (m)'] = value
+        self._data["X coordinate (m)"] = value
 
     @property
     def y(self):
-        value = self._data['Y coordinate (m)']
-        if  re.match(r'^[\d\.]+$', value):
-            value = '{:8.1f}'.format(float(value))
-        elif re.match(r'^[\d\.]+\s*[^0-9.]+$', value):
-            value = '{:8.1f}'.format(float(re.sub(r'\s*[^0-9.]+', '', value)))
+        value = self._data["Y coordinate (m)"]
+        if re.match(r"^[\d\.]+$", value):
+            value = "{:8.1f}".format(float(value))
+        elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+            value = "{:8.1f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
         return value
 
     @y.setter
     def y(self, value):
-        self._data['Y coordinate (m)'] = value
+        self._data["Y coordinate (m)"] = value
 
     @property
     def z(self):
-        value = self._data['Z coordinate (m)']
-        if  re.match(r'^[\d\.]+$', value):
-            value = '{:8.1f}'.format(float(value))
-        elif re.match(r'^[\d\.]+\s*[^0-9.]+$', value):
-            value = '{:8.1f}'.format(float(re.sub(r'\s*[^0-9.]+', '', value)))
+        value = self._data["Z coordinate (m)"]
+        if re.match(r"^[\d\.]+$", value):
+            value = "{:8.1f}".format(float(value))
+        elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+            value = "{:8.1f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
         return value
 
     @z.setter
     def z(self, value):
-        self._data['Z coordinate (m)'] = value
+        self._data["Z coordinate (m)"] = value
 
     @property
     def latitude(self):
-        return self._data['Latitude (N is +)']
+        return self._data["Latitude (N is +)"]
 
     @latitude.setter
     def latitude(self, value):
-        self._data['Latitude (N is +)'] = value
+        self._data["Latitude (N is +)"] = value
 
     @property
     def longitude(self):
-        return self._data['Longitude (E is +)']
+        return self._data["Longitude (E is +)"]
 
     @longitude.setter
     def longitude(self, value):
-        self._data['Longitude (E is +)'] = value
+        self._data["Longitude (E is +)"] = value
 
     @property
     def elevation(self):
-        value = self._data['Elevation (m,ellips.)']
-        if  re.match(r'^[\d\.]+$', value):
-            value = '{:7.1f}'.format(float(value))
-        elif re.match(r'^[\d\.]+\s*[^0-9.]+$', value):
-            value = '{:7.1f}'.format(float(re.sub(r'\s*[^0-9.]+', '', value)))
+        value = self._data["Elevation (m,ellips.)"]
+        if re.match(r"^[\d\.]+$", value):
+            value = "{:7.1f}".format(float(value))
+        elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+            value = "{:7.1f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
         return value
-
 
     @elevation.setter
     def elevation(self, value):
-        self._data['Elevation (m,ellips.)'] = value
+        self._data["Elevation (m,ellips.)"] = value
 
     @property
     def additional(self):
-        return self._data['Additional Information']
+        return self._data["Additional Information"]
 
     @additional.setter
     def additional(self, value):
-        self._data['Additional Information'] = value
+        self._data["Additional Information"] = value
 
     def string(self):
-        self.additional = _format_string(self.additional,'multilinevalue')
+        self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
 2.   Site Location Information
 
