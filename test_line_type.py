@@ -93,10 +93,30 @@ class TestLineType(unittest.TestCase):
         antenna_sec = Antenna()
 
         lines = ['4.3  Antenna Type             : Leica', '     Serial Number            : 1111122']
-        antenna_text = """\n4.   GNSS Antenna Information\n\n4.1  Antenna Type             : Leica\n     Serial Number            : 1111122\n     Antenna Reference Point  : (BPA/BCR/XXX from "antenna.gra"; see instr.)\n     Marker->ARP Up Ecc. (m)  : (F8.4)\n     Marker->ARP North Ecc(m) : (F8.4)\n     Marker->ARP East Ecc(m)  : (F8.4)\n     Alignment from True N    : (deg; + is clockwise/east)\n     Antenna Radome Type      : (A4 from rcvr_ant.tab; see instructions)\n     Radome Serial Number     :\n     Antenna Cable Type       : (vendor & type number)\n     Antenna Cable Length     : (m)\n     Date Installed           : (CCYY-MM-DDThh:mmZ)\n     Date Removed             : (CCYY-MM-DDThh:mmZ)\n     Additional Information   : (multiple lines)\n"""
+
+        # Note the whitespace after "Radome Serial Number", can be a problem in
+        # editors that automatically removes trailing whitespace
+        antenna_text = """
+4.   GNSS Antenna Information
+
+4.1  Antenna Type             : Leica
+     Serial Number            : 1111122
+     Antenna Reference Point  : (BPA/BCR/XXX from "antenna.gra"; see instr.)
+     Marker->ARP Up Ecc. (m)  : (F8.4)
+     Marker->ARP North Ecc(m) : (F8.4)
+     Marker->ARP East Ecc(m)  : (F8.4)
+     Alignment from True N    : (deg; + is clockwise/east)
+     Antenna Radome Type      : (A4 from rcvr_ant.tab; see instructions)
+     Radome Serial Number     : 
+     Antenna Cable Type       : (vendor & type number)
+     Antenna Cable Length     : (m)
+     Date Installed           : (CCYY-MM-DDThh:mmZ)
+     Date Removed             : (CCYY-MM-DDThh:mmZ)
+     Additional Information   : (multiple lines)
+"""
 
         antenna_sec.read_lines(lines)
-
+        self.maxDiff = None
         self.assertEqual(antenna_text, antenna_sec.string())
 
     
