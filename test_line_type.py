@@ -55,7 +55,7 @@ class TestLineType(unittest.TestCase):
             'Serial Number': '1111122'
         }
         subtitle = '3.'
-        title = '  Antenna Type             :'
+        title = 'Antenna Type'
         sec.read_lines(lines)
         self.assertEqual(sec._data, _data)
         self.assertEqual(subtitle, sec.subtitle)
@@ -116,7 +116,6 @@ class TestLineType(unittest.TestCase):
 """
 
         antenna_sec.read_lines(lines)
-        self.maxDiff = None
         self.assertEqual(antenna_text, antenna_sec.string())
 
     
