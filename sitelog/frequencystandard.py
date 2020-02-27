@@ -6,6 +6,7 @@ from sitelog.sections import (
 )
 from sitelog import _format_string
 
+
 class Frequency(SubSection):
     def __init__(self):
         super().__init__()
@@ -23,38 +24,38 @@ class Frequency(SubSection):
 
     @property
     def standard_type(self):
-        return self._data['Standard Type']
+        return self._data["Standard Type"]
 
     @standard_type.setter
     def standard_type(self, value):
-        self._data['Standard Type'] = value
+        self._data["Standard Type"] = value
 
     @property
     def input_freq(self):
-        return self._data['Input Frequency']
+        return self._data["Input Frequency"]
 
     @input_freq.setter
     def input_freq(self, value):
-        self._data['Input Frequency'] = value
+        self._data["Input Frequency"] = value
 
     @property
     def effective_dates(self):
-        return self._data['Effective Dates']
+        return self._data["Effective Dates"]
 
     @effective_dates.setter
     def effective_dates(self, value):
-        self._data['Effective Dates'] = value
+        self._data["Effective Dates"] = value
 
     @property
     def notes(self):
-        return self._data['Notes']
+        return self._data["Notes"]
 
     @notes.setter
     def notes(self, value):
-        self._data['Notes'] = value
+        self._data["Notes"] = value
 
     def string(self):
-        self.notes = _format_string(self.notes,'multilinevalue')
+        self.notes = _format_string(self.notes, "multilinevalue")
         section_text = f"""
 6.{self.subtitle}  Standard Type            : {self.standard_type}
        Input Frequency        : {self.input_freq}
@@ -63,13 +64,13 @@ class Frequency(SubSection):
 """
         return section_text
 
+
 class FrequencyStandard(SectionList):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
         self.subsection_type = Frequency
-        self.section_type = 'subsectionheader'
-
+        self.section_type = "subsectionheader"
 
     def _template_dict(self):
         data = {
@@ -79,7 +80,6 @@ class FrequencyStandard(SectionList):
             "Notes": "(multiple lines)",
         }
         return data
-
 
     def string(self):
 
@@ -91,6 +91,6 @@ class FrequencyStandard(SectionList):
                 section_text += subsection.string()
         else:
             s = Frequency()
-            s.subtitle = 'x'
+            s.subtitle = "x"
             section_text += s.string()
         return section_text
