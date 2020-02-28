@@ -2,11 +2,15 @@ import unittest
 
 from sitelog import (
     _determine_line_type,
+    _format_string,
     SiteIdentification,
     Section,
     SectionList,
     AntennaType,
     Antenna,
+    MetInstrument,
+    Meteorological,
+    SensorType,
 )
 
 
@@ -55,7 +59,7 @@ class TestLineType(unittest.TestCase):
             "4.3.x  Antenna Type             : Leica",
             "     Serial Number            : 1111122",
         ]
-        _data = {"Antenna Type": "Leica", "Serial Number": "1111122"}
+        _data = {"Model": "Leica", "Serial Number": "1111122"}
         subtitle = "3."
         title = "Antenna Type"
         sec.read_lines(lines)
@@ -126,6 +130,63 @@ class TestLineType(unittest.TestCase):
         antenna_sec.read_lines(lines)
         self.assertEqual(antenna_text, antenna_sec.string())
 
+    def test_format_string(self):
+        line = "If an antenna has a cover which is integral and not ordinarily removable by the user, it is considered part of the antenna and NONE is to be used for the radome code."
+        line_type = "multilinevalue"
+        multiline = "If an antenna has a cover which is integral and\n                              : not ordinarily removable by the user, it is\n                              : considered part of the antenna and NONE is to be\n                              : used for the radome code."
+        self.assertEqual(multiline, _format_string(line, line_type))
+
+    def test_meteorological(self):  
+        """
+        Writing a Meteorological Instrumentation from existing sitelog.
+        Organising subsection
+        """
+        met_sec = Meteorological()
+
+        lines = [
+            "8.2.2  Pressure Sensor Model             : Pres. Sens.",
+            "       Serial Number            : 1111122",
+        ]
+
+        met_text = """
+8.   Meteorological Instrumentation
+
+8.2.1 Pressure Sensor Model   : Pres. Sens.
+       Manufacturer           : 
+       Serial Number          : 1111122
+       Data Sampling Interval : (sec)
+       Accuracy               : 
+       Height Diff to Ant     : (m)
+       Calibration date       : (CCYY-MM-DD)
+       Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
+       Notes                  : (multiple lines)
+"""
+
+        met_sec.read_lines(lines)
+        self.assertEqual(met_text, met_sec.string())
+
+    def test_meteorological_new(self): 
+        meteorological = Meteorological()
+        meteorological[0] = MetInstrument()
+        meteorological[0].instrument = SensorType.PRESSURE
+        meteorological[0].model = "Pres. Sens."
+        meteorological[0].serial_number = "1111122"
+
+        met_text = """
+8.   Meteorological Instrumentation
+
+8.2.1 Pressure Sensor Model   : Pres. Sens.
+       Manufacturer           : 
+       Serial Number          : 1111122
+       Data Sampling Interval : (sec)
+       Accuracy               : 
+       Height Diff to Ant     : (m)
+       Calibration date       : (CCYY-MM-DD)
+       Effective Dates        : (CCYY-MM-DD/CCYY-MM-DD)
+       Notes                  : (multiple lines)
+"""
+
+        self.assertEqual(met_text, meteorological.string())
 
 if __name__ == "__main__":
     unittest.main()

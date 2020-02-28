@@ -35,7 +35,8 @@ class MetInstrument(Section):
             "Manufacturer": "",
             "Serial Number": "",
             "Data Sampling Interval": "(sec)",
-            "Accuracy (% rel h)": "(% rel h)",
+            "Distance to Antenna": "(m)",
+            "Accuracy": "",
             "Aspiration": "(UNASPIRATED/NATURAL/FAN/etc)",
             "Height Diff to Ant": "(m)",
             "Calibration date": "(CCYY-MM-DD)",
@@ -50,19 +51,22 @@ class MetInstrument(Section):
 
     @instrument.setter
     def instrument(self, value):
-        self.title = value.value
-        if value.value == "Humidity Sensor Model":
-            self.subtitle = "1."
-        elif value.value == "Pressure Sensor Model":
-            self.subtitle = "2."
-        elif value.value == "Temp. Sensor Model":
-            self.subtitle = "3."
-        elif value.value == "Water Vapor Radiometer":
-            self.subtitle = "4."
-        elif value.value == "Other Instrumentation":
-            self.subtitle = "5."
+        if not isinstance(value, SensorType):
+            raise ValueError("Input needs to be a SensorType()")
         else:
-            self.subtitle = "x."
+            self.title = value.value
+            if value.value == "Humidity Sensor Model":
+                self.subtitle = "1."
+            elif value.value == "Pressure Sensor Model":
+                self.subtitle = "2."
+            elif value.value == "Temp. Sensor Model":
+                self.subtitle = "3."
+            elif value.value == "Water Vapor Radiometer":
+                self.subtitle = "4."
+            elif value.value == "Other Instrumentation":
+                self.subtitle = "5."
+            else:
+                self.subtitle = "x."
 
     @property
     def other(self):
@@ -105,12 +109,28 @@ class MetInstrument(Section):
         self._data["Data Sampling Interval"] = value
 
     @property
+    def distance_antenna(self):
+        return self._data['Distance to Antenna']
+
+    @distance_antenna.setter
+    def distance_antenna(self, value):
+        self._data['Distance to Antenna'] = value
+
+    @property
     def accuracy(self):
-        return self._data[f"Accuracy (% rel h)"]
+        return self._data[f"Accuracy"]
 
     @accuracy.setter
     def accuracy(self, value):
-        self._data[f"Accuracy (% rel h)"] = value
+        self._data[f"Accuracy"] = value
+
+    @property
+    def aspiration(self):
+        return self._data[f"Aspiration"]
+
+    @aspiration.setter
+    def aspiration(self, value):
+        self._data[f"Aspiration"] = value
 
     @property
     def height_diff(self):
@@ -149,10 +169,35 @@ class MetInstrument(Section):
     def string(self):
         self.subsubtitle = _format_string(self.subsubtitle, "subsubsecnr")
         self.title = _format_string(self.title, "subsubsectitle")
+        self.notes = _format_string(self.notes,'multilinevalue')
+        self.model = _format_string(self.model,'multilinevalue')
         if self.subtitle == "5.":
             section_text = f"""
-{self.subsubtitle}{self.title}{self.other}
-    """
+{self.subsubtitle}{self.title}{self.model}
+"""
+        elif self.subtitle == '2.':
+            section_text = f"""
+{self.subsubtitle}{self.title}{self.model}
+       Manufacturer           : {self.manufacturer}
+       Serial Number          : {self.serial_number}
+       Data Sampling Interval : {self.data_interval}
+       Accuracy               : {self.accuracy}
+       Height Diff to Ant     : {self.height_diff}
+       Calibration date       : {self.calibration_date}
+       Effective Dates        : {self.effective_dates}
+       Notes                  : {self.notes}
+"""
+        elif self.subtitle == '4.':
+            section_text = f"""
+{self.subsubtitle}{self.title}{self.model}
+       Manufacturer           : {self.manufacturer}
+       Serial Number          : {self.serial_number}
+       Distance to Antenna    : {self.distance_antenna}
+       Height Diff to Ant     : {self.height_diff}
+       Calibration date       : {self.calibration_date}
+       Effective Dates        : {self.effective_dates}
+       Notes                  : {self.notes}
+"""           
         else:
             section_text = f"""
 {self.subsubtitle}{self.title}{self.model}
@@ -160,11 +205,12 @@ class MetInstrument(Section):
        Serial Number          : {self.serial_number}
        Data Sampling Interval : {self.data_interval}
        Accuracy (% rel h)     : {self.accuracy}
+       Aspiration             : {self.aspiration}
        Height Diff to Ant     : {self.height_diff}
        Calibration date       : {self.calibration_date}
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
-    """
+"""
         return section_text
 
 
@@ -182,7 +228,8 @@ class Meteorological(SectionList):
             "Manufacturer": "",
             "Serial Number": "",
             "Data Sampling Interval": "(sec)",
-            "Accuracy (% rel h)": "(% rel h)",
+            "Distance to Antenna": "(m)",
+            "Accuracy": "",
             "Aspiration": "(UNASPIRATED/NATURAL/FAN/etc)",
             "Height Diff to Ant": "(m)",
             "Calibration date": "(CCYY-MM-DD)",

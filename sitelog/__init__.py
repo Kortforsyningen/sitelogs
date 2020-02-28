@@ -32,14 +32,14 @@ def _format_string(line, line_type):
     formatting lines to sitelog format 
 
     options:
-    'sectiontitle'
-    'sectionnr'
-    'subsectitle'
-    'subsubsecnr'
-    'subsubsectitle'
-    'mainkey'
-    'subkey'
-    'multilinevalue'
+    "sectiontitle"
+    "sectionnr"
+    "subsectitle"
+    "subsubsecnr"
+    "subsubsectitle"
+    "mainkey"
+    "subkey"
+    "multilinevalue"
     """
     formatted_string = ""
 
@@ -53,18 +53,18 @@ def _format_string(line, line_type):
         formatted_string = "{:24}{:2}".format(line, ":")
 
     if line_type == "subsubsecnr":
-        formatted_string = "{:7}".format(line)
+        formatted_string = "{:6}".format(line)
 
     if line_type == "subsubsectitle":
         if len(line) < 23:
-            formatted_string = "{:23}{:2}".format(line, ":")
+            formatted_string = "{:24}{:2}".format(line, ":")
         else:
             lines = textwrap.wrap(line, width=23)
             for i, l in enumerate(lines):
                 if i == 0:
-                    formatted_l = "{:23}{:2}".format(l, ":")
+                    formatted_l = "{:24}{:2}".format(l, ":")
                 else:
-                    formatted_l = "\n{:7}{:23}{:2}".format("", l, ":")
+                    formatted_l = "\n{:6}{:24}{:2}".format("", l, ":")
                 formatted_string += formatted_l
 
     if line_type == "mainkey":

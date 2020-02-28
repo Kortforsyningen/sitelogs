@@ -39,11 +39,14 @@ class Section:
             if line_type == "subsectionheader" or line_type == "subsubsectionheader":
                 if line_type == "subsectionheader":
                     self.subtitle = re.sub(r"^d{1,2}\.|\s.*", "", line)
+                    line = re.sub(r"^[\d{1,2}\.]+[\dx]{1,2}", "", line)
+                    (key, value) = [s.strip() for s in line.split(" : ")]
                 else:
                     self.subtitle = re.sub(r"^\d{1,2}\.|[\d{1,2}x]\s.*", "", line)
                     self.title = re.sub(r"^[\d{1,2}\.]+[\dx]{1,2}\s*|\s*:.*", "", line)
-                line = re.sub(r"^[\d{1,2}\.]+[\dx]{1,2}", "", line)
-                (key, value) = [s.strip() for s in line.split(" : ")]
+                    line = re.sub(r"^[\d{1,2}\.]+[\dx]{1,2}", "", line)
+                    (key, value) = [s.strip() for s in line.split(" : ")]
+                    key = "Model"
                 self._data[key] = value
                 previous_key = key
 
