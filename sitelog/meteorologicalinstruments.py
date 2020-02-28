@@ -25,7 +25,6 @@ class MetInstrument(Section):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
-        #        self.instrument = SensorType
         self.subsubtitle = ""
         self.title = gen_title
 
@@ -55,15 +54,15 @@ class MetInstrument(Section):
             raise ValueError("Input needs to be a SensorType()")
         else:
             self.title = value.value
-            if value.value == "Humidity Sensor Model":
+            if value.value == "HUMIDITY":
                 self.subtitle = "1."
-            elif value.value == "Pressure Sensor Model":
+            elif value.name == "PRESSURE":
                 self.subtitle = "2."
-            elif value.value == "Temp. Sensor Model":
+            elif value.name == "TEMPERATURE":
                 self.subtitle = "3."
-            elif value.value == "Water Vapor Radiometer":
+            elif value.name == "WATERVAPOR":
                 self.subtitle = "4."
-            elif value.value == "Other Instrumentation":
+            elif value.name == "OTHER":
                 self.subtitle = "5."
             else:
                 self.subtitle = "x."
@@ -169,8 +168,8 @@ class MetInstrument(Section):
     def string(self):
         self.subsubtitle = _format_string(self.subsubtitle, "subsubsecnr")
         self.title = _format_string(self.title, "subsubsectitle")
-        self.notes = _format_string(self.notes,'multilinevalue')
-        self.model = _format_string(self.model,'multilinevalue')
+        self.notes = _format_string(self.notes,"multilinevalue")
+        self.model = _format_string(self.model,"multilinevalue")
         if self.subtitle == "5.":
             section_text = f"""
 {self.subsubtitle}{self.title}{self.model}
@@ -217,26 +216,10 @@ class MetInstrument(Section):
 class Meteorological(SectionList):
     def __init__(self):
         super().__init__()
-        self._data = self._template_dict()
         self.list_subtitles = []
         self.subsection_type = MetInstrument
         self.section_type = "subsubsectionheader"
 
-    def _template_dict(self):
-        data = {
-            "Model": "",
-            "Manufacturer": "",
-            "Serial Number": "",
-            "Data Sampling Interval": "(sec)",
-            "Distance to Antenna": "(m)",
-            "Accuracy": "",
-            "Aspiration": "(UNASPIRATED/NATURAL/FAN/etc)",
-            "Height Diff to Ant": "(m)",
-            "Calibration date": "(CCYY-MM-DD)",
-            "Effective Dates": "(CCYY-MM-DD/CCYY-MM-DD)",
-            "Notes": "(multiple lines)",
-        }
-        return data
 
     def string(self):
 
@@ -263,7 +246,7 @@ class Meteorological(SectionList):
         else:
             s = self.subsection_type()
             s.title = gen_title
-            s.subsubtitle = "x"
             s.subtitle = "x."
+            s.subsubtitle = "8." + s.subtitle + "x"
             section_text += s.string()
         return section_text

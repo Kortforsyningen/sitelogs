@@ -4,6 +4,13 @@ from sitelog import (
     MetInstrument,
     SensorType,
 )
+from sitelog.local_conditions import (
+    LocalCondition,
+    ConditionTypes,
+)
+
+from sitelog.episodic_effects import Effect
+
 
 if __name__ == "__main__":
     # Læs fra en eksisterende sitelog
@@ -39,6 +46,11 @@ if __name__ == "__main__":
     log2.meteorological[0].model = "first"
     log2.meteorological[2].model = "third"
     log2.meteorological[3].model = "fourth"
+    log2.local_conditions[0] = LocalCondition()
+    log2.local_conditions[0].condition = ConditionTypes.MULTIPATH
+    log2.local_conditions[0].dates = "2020-12-12"
+    log2.episodic_effects[0] = Effect()
+    log2.episodic_effects[0].date = "2019-12-12"
     # Det ville gøre det lettere at bruge koden hvis man kunne gøre sådan her:
     #
     #  log2.gnss[0] = GnssReceiver(

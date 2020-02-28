@@ -12,6 +12,8 @@ import sitelog.surveyedties as surveyedties
 import sitelog.frequencystandard as frequencystandard
 import sitelog.collocation as collocation
 import sitelog.meteorologicalinstruments as meteorologicalinstruments
+import sitelog.local_conditions as local_conditions
+import sitelog.episodic_effects as episodic_effects
 
 
 class SiteLog:
@@ -28,6 +30,8 @@ class SiteLog:
         self.frequency = frequencystandard.FrequencyStandard()
         self.collocation = collocation.Collocation()
         self.meteorological = meteorologicalinstruments.Meteorological()
+        self.local_conditions = local_conditions.Conditions()
+        self.episodic_effects = episodic_effects.EpisodicEffects()
         if sitelogfile is not None:
             self._read()
 
@@ -49,6 +53,8 @@ class SiteLog:
             self.frequency.read_lines(lines[sections[6] : sections[7]])
             self.collocation.read_lines(lines[sections[7] : sections[8]])
             self.meteorological.read_lines(lines[sections[8] : sections[9]])
+            self.local_conditions.read_lines(lines[sections[9] : sections[10]])
+            self.episodic_effects.read_lines(lines[sections[10] : sections[11]])
 
     def write(self, sitelogfile):
         with open(sitelogfile, "w") as f:
@@ -62,3 +68,5 @@ class SiteLog:
             f.write(self.frequency.string())
             f.write(self.collocation.string())
             f.write(self.meteorological.string())
+            f.write(self.local_conditions.string())
+            f.write(self.episodic_effects.string())

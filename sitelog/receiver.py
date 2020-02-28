@@ -12,11 +12,6 @@ class GnssReceiver(Section):
     def __init__(self):
         super().__init__()
         self._data = self._template_dict()
-        #        self.subtitle = []
-        #        self.title = ''
-        self.number = None
-
-    #       self._data['Receiver Type'] = receiver_type
 
     def _template_dict(self):
         data = {
@@ -132,23 +127,8 @@ class GnssReceiver(Section):
 class GNSS(SectionList):
     def __init__(self):
         super().__init__()
-        self._data = self._template_dict
         self.subsection_type = GnssReceiver
         self.section_type = "subsectionheader"  # subsection
-
-    def _template_dict(self):
-        data = {
-            "Receiver Type": "(A20, from rcvr_ant.tab; see instructions)",
-            "Satellite System": "(GPS+GLO+GAL+BDS+QZSS+SBAS)",
-            "Serial Number": "(A20, but note the first A5 is used in SINEX)",
-            "Firmware Version": "(A11)",
-            "Elevation Cutoff Setting": "(deg)",
-            "Date Installed": "(CCYY-MM-DDThh:mmZ)",
-            "Date Removed": "(CCYY-MM-DDThh:mmZ)",
-            "Temperature Stabiliz.": "(none or tolerance in degrees C)",
-            "Additional Information": "(multiple lines)",
-        }
-        return data
 
     def string(self):
 
@@ -159,7 +139,7 @@ class GNSS(SectionList):
             for subsection in self._subsections:
                 section_text += subsection.string()
         else:
-            s = GnssReceiver()
+            s = self.subsection_type()
             s.subtitle = "x"
             section_text += s.string()
         return section_text
