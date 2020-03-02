@@ -136,7 +136,7 @@ class TestLineType(unittest.TestCase):
         multiline = "If an antenna has a cover which is integral and\n                              : not ordinarily removable by the user, it is\n                              : considered part of the antenna and NONE is to be\n                              : used for the radome code."
         self.assertEqual(multiline, _format_string(line, line_type))
 
-    def test_meteorological(self):  
+    def test_meteorological(self):
         """
         Writing a Meteorological Instrumentation from existing sitelog.
         Organising subsection
@@ -165,7 +165,7 @@ class TestLineType(unittest.TestCase):
         met_sec.read_lines(lines)
         self.assertEqual(met_text, met_sec.string())
 
-    def test_meteorological_new(self): 
+    def test_meteorological_new(self):
         meteorological = Meteorological()
         meteorological[0] = MetInstrument()
         meteorological[0].instrument = SensorType.PRESSURE
@@ -187,6 +187,7 @@ class TestLineType(unittest.TestCase):
 """
 
         self.assertEqual(met_text, meteorological.string())
+
 
 if __name__ == "__main__":
     unittest.main()

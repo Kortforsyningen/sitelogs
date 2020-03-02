@@ -1,10 +1,9 @@
-import re
-
 from sitelog.sections import (
     SubSection,
     SectionList,
     Section,
 )
+
 
 class Effect(Section):
     def __init__(self):

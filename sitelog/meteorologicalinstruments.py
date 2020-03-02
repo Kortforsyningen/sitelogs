@@ -109,11 +109,11 @@ class MetInstrument(Section):
 
     @property
     def distance_antenna(self):
-        return self._data['Distance to Antenna']
+        return self._data["Distance to Antenna"]
 
     @distance_antenna.setter
     def distance_antenna(self, value):
-        self._data['Distance to Antenna'] = value
+        self._data["Distance to Antenna"] = value
 
     @property
     def accuracy(self):
@@ -168,13 +168,13 @@ class MetInstrument(Section):
     def string(self):
         self.subsubtitle = _format_string(self.subsubtitle, "subsubsecnr")
         self.title = _format_string(self.title, "subsubsectitle")
-        self.notes = _format_string(self.notes,"multilinevalue")
-        self.model = _format_string(self.model,"multilinevalue")
+        self.notes = _format_string(self.notes, "multilinevalue")
+        self.model = _format_string(self.model, "multilinevalue")
         if self.subtitle == "5.":
             section_text = f"""
 {self.subsubtitle}{self.title}{self.model}
 """
-        elif self.subtitle == '2.':
+        elif self.subtitle == "2.":
             section_text = f"""
 {self.subsubtitle}{self.title}{self.model}
        Manufacturer           : {self.manufacturer}
@@ -186,7 +186,7 @@ class MetInstrument(Section):
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
 """
-        elif self.subtitle == '4.':
+        elif self.subtitle == "4.":
             section_text = f"""
 {self.subsubtitle}{self.title}{self.model}
        Manufacturer           : {self.manufacturer}
@@ -196,7 +196,7 @@ class MetInstrument(Section):
        Calibration date       : {self.calibration_date}
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
-"""           
+"""
         else:
             section_text = f"""
 {self.subsubtitle}{self.title}{self.model}
@@ -219,7 +219,6 @@ class Meteorological(SectionList):
         self.list_subtitles = []
         self.subsection_type = MetInstrument
         self.section_type = "subsubsectionheader"
-
 
     def string(self):
 

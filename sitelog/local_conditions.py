@@ -17,6 +17,7 @@ from sitelog import _format_string
 
 gen_title = "Local Condition"
 
+
 class LocalCondition(Section):
     def __init__(self):
         super().__init__()
@@ -87,14 +88,14 @@ class LocalCondition(Section):
     def string(self):
         self.subsubtitle = _format_string(self.subsubtitle, "subsubsecnr")
         self.title = _format_string(self.title, "subsubsectitle")
-        self.additional = _format_string(self.additional,"multilinevalue")
-        if self.subtitle == '1.' or self.subtitle == 'x.':
+        self.additional = _format_string(self.additional, "multilinevalue")
+        if self.subtitle == "1." or self.subtitle == "x.":
             section_text = f"""
 {self.subsubtitle}{self.title}{self.source}
        Observed Degradations  : {self.obs_degradation}
        Effective Dates        : {self.dates}
        Additional Information : {self.additional}
-"""        
+"""
         else:
             section_text = f"""
 {self.subsubtitle}{self.title}{self.source}
@@ -102,6 +103,7 @@ class LocalCondition(Section):
        Additional Information : {self.additional}
 """
         return section_text
+
 
 class Conditions(SectionList):
     def __init__(self):

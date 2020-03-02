@@ -101,3 +101,56 @@ class SubSection(Section):
     # Class for subsections of SectionList
     def __init__(self):
         super().__init__()
+
+
+class SectionListHeader(Section):
+    """
+    class for sections with subsections (Primary and secondary contacts) 
+    and header values
+    """
+
+    def __init__(self):
+        self._subsections = []
+        self.header = {}
+        self.subsection_type = None
+        self.section_type = ""
+
+    def __getitem__(self, index):
+        return self._subsections[index]
+
+    def __setitem__(self, index, value):
+        try:
+            value.subtitle = index + 1
+            self._subsections[index] = value
+        except IndexError:
+            if index == len(self._subsections):
+                if self.section_type == "subsectionheader":
+                    value.subtitle = index + 1
+                else:
+                    value.subtitle = "x."
+                self._subsections.append(value)
+
+    def read_lines(self, lines):
+        sections = []
+        for line_no, line in enumerate(lines):
+            if (
+                re.sub(r"^\s*|\s*$", "", line) == "Primary Contact"
+                or re.sub(r"^\s*|\s*$", "", line) == "Secondary Contact"
+            ):
+                sections.append(line_no)
+            # index til subsection header
+        self.header = Section()
+        self.header.read_lines(lines[0 : sections[0]] + [lines[-3]])
+
+        for sec_no, subsection in enumerate(sections):
+            s = self.subsection_type()
+
+            if subsection == sections[-1]:
+                s.read_lines(lines[subsection:])
+            else:
+                s.read_lines(lines[subsection : sections[sec_no + 1]])
+
+            if self.section_type == "subsectionheader":
+                s.subtitle = sec_no + 1
+
+            self._subsections.append(s)

@@ -14,6 +14,9 @@ import sitelog.collocation as collocation
 import sitelog.meteorologicalinstruments as meteorologicalinstruments
 import sitelog.local_conditions as local_conditions
 import sitelog.episodic_effects as episodic_effects
+import sitelog.contact_agency as contact_agency
+import sitelog.responsible_agency as responsible_agency
+import sitelog.more_info as more_info
 
 
 class SiteLog:
@@ -32,6 +35,9 @@ class SiteLog:
         self.meteorological = meteorologicalinstruments.Meteorological()
         self.local_conditions = local_conditions.Conditions()
         self.episodic_effects = episodic_effects.EpisodicEffects()
+        self.contact_agency = contact_agency.ContactAgencies()
+        self.responsible_agency = responsible_agency.ResponsibleAgencies()
+        self.more_info = more_info.MoreInfo()
         if sitelogfile is not None:
             self._read()
 
@@ -55,6 +61,9 @@ class SiteLog:
             self.meteorological.read_lines(lines[sections[8] : sections[9]])
             self.local_conditions.read_lines(lines[sections[9] : sections[10]])
             self.episodic_effects.read_lines(lines[sections[10] : sections[11]])
+            self.contact_agency.read_lines(lines[sections[11] : sections[12]])
+            self.responsible_agency.read_lines(lines[sections[12] : sections[13]])
+            self.more_info.read_lines(lines[sections[13] :])
 
     def write(self, sitelogfile):
         with open(sitelogfile, "w") as f:
@@ -70,3 +79,6 @@ class SiteLog:
             f.write(self.meteorological.string())
             f.write(self.local_conditions.string())
             f.write(self.episodic_effects.string())
+            f.write(self.contact_agency.string())
+            f.write(self.responsible_agency.string())
+            f.write(self.more_info.string())

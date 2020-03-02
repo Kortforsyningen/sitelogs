@@ -10,6 +10,8 @@ from sitelog.local_conditions import (
 )
 
 from sitelog.episodic_effects import Effect
+from sitelog.contact_agency import ContactAgency
+from sitelog.responsible_agency import ResponsibleAgency
 
 
 if __name__ == "__main__":
@@ -17,6 +19,7 @@ if __name__ == "__main__":
     sitelog = SiteLog("fyha_20161220.log")
     # ændr noget
     sitelog.header.code = "FLAF"
+    sitelog.contact_agency[1].fax = "1111"
     sitelog.write("test.log")
 
     # Lav en ny fra scratch
@@ -51,6 +54,13 @@ if __name__ == "__main__":
     log2.local_conditions[0].dates = "2020-12-12"
     log2.episodic_effects[0] = Effect()
     log2.episodic_effects[0].date = "2019-12-12"
+    log2.contact_agency.agency = "SDFE"
+    log2.contact_agency[0] = ContactAgency()
+    log2.contact_agency[0].contact_name = "SDFE"
+    log2.contact_agency[1] = ContactAgency()
+    log2.contact_agency[1].contact_name = "SDFE1"
+    log2.responsible_agency[0] = ResponsibleAgency()
+    log2.responsible_agency[0].fax = "13212312"
     # Det ville gøre det lettere at bruge koden hvis man kunne gøre sådan her:
     #
     #  log2.gnss[0] = GnssReceiver(
