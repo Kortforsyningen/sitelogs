@@ -3,6 +3,7 @@ from sitelog import (
     GnssReceiver,
     MetInstrument,
     SensorType,
+    AntennaType,
 )
 from sitelog.local_conditions import (
     LocalCondition,
@@ -16,9 +17,10 @@ from sitelog.responsible_agency import ResponsibleAgency
 
 if __name__ == "__main__":
     # Læs fra en eksisterende sitelog
-    sitelog = SiteLog("fyha_20161220.log")
+    sitelog = SiteLog("onsa_20191104.log")
     # ændr noget
     sitelog.header.code = "FLAF"
+    sitelog.collocation[0].status = "Mobile"
     sitelog.contact_agency[1].fax = "1111"
     sitelog.write("test.log")
 
@@ -37,6 +39,8 @@ if __name__ == "__main__":
     log2.gnss[1] = GnssReceiver()
     log2.gnss[0].receiver_type = "Receiver 1"
     log2.gnss[1].receiver_type = "Receiver 2"
+    log2.antenna[0] = AntennaType()
+    log2.antenna[0].up = 222
     log2.meteorological[0] = MetInstrument()
     log2.meteorological[1] = MetInstrument()
     log2.meteorological[2] = MetInstrument()

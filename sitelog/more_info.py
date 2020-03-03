@@ -5,6 +5,7 @@ from sitelog import _format_string
 
 class MoreInfo(Section):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
 
     def _template_dict(self):
@@ -103,16 +104,20 @@ class MoreInfo(Section):
 
 13.  More Information
 
-     Primary Data Center      :
-     Secondary Data Center    :
-     URL for More Information : 
+     Primary Data Center      : {self.primary_center}
+     Secondary Data Center    : {self.secondary_center}
+     URL for More Information : {self.info_url}
      Hardcopy on File
-       Site Map               : (Y or URL)
-       Site Diagram           : (Y or URL)
-       Horizon Mask           : (Y or URL)
-       Monument Description   : (Y or URL)
-       Site Pictures          : (Y or URL)
-     Additional Information   : (multiple lines)
+       Site Map               : {self.site_map}
+       Site Diagram           : {self.site_diagram}
+       Horizon Mask           : {self.horizon_mask}
+       Monument Description   : {self.monument}
+       Site Pictures          : {self.site_pictures}
+     Additional Information   : {self.additional}
 """
+        for i, line in enumerate(self.freeform):
+            if re.findall("Antenna Graphics with Dimensions", line):
+                for line in self.freeform[i:]:
+                    section_text += "\n" + line
 
         return section_text

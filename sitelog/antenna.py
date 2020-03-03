@@ -37,6 +37,10 @@ class AntennaType(SubSection):
 
     @antenna_type.setter
     def antenna_type(self, value):
+        if len(value) > 20:
+            raise ValueError(
+                "Antenna Type from rcvr_ant.tab must be no longer than 20 characters long"
+            )
         self._data["Antenna Type"] = value
 
     @property
@@ -53,7 +57,7 @@ class AntennaType(SubSection):
 
     @antenna_reference.setter
     def antenna_reference(self, value):
-        self._data["Serial Number"] = value
+        self._data["Antenna Reference Point"] = value
 
     @property
     def up(self):
@@ -61,6 +65,13 @@ class AntennaType(SubSection):
 
     @up.setter
     def up(self, value):
+        if type(value) is str:
+            if re.match(r"^[\d\.]+$", value):
+                value = "{:8.4f}".format(float(value))
+            elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+                value = "{:8.4f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
+        elif type(value) is float:
+            value = "{:8.4f}".format(value)
         self._data["Marker->ARP Up Ecc. (m)"] = value
 
     @property
@@ -69,6 +80,13 @@ class AntennaType(SubSection):
 
     @north.setter
     def north(self, value):
+        if type(value) is str:
+            if re.match(r"^[\d\.]+$", value):
+                value = "{:8.4f}".format(float(value))
+            elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+                value = "{:8.4f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
+        elif type(value) is float:
+            value = "{:8.4f}".format(value)
         self._data["Marker->ARP North Ecc(m)"] = value
 
     @property
@@ -77,6 +95,13 @@ class AntennaType(SubSection):
 
     @east.setter
     def east(self, value):
+        if type(value) is str:
+            if re.match(r"^[\d\.]+$", value):
+                value = "{:8.4f}".format(float(value))
+            elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+                value = "{:8.4f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
+        elif type(value) is float:
+            value = "{:8.4f}".format(value)
         self._data["Marker->ARP East Ecc(m)"] = value
 
     @property

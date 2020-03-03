@@ -20,6 +20,7 @@ class Header:
 
 class Form(Section):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
 
     def _template_dict(self):
@@ -55,6 +56,8 @@ class Form(Section):
 
     @date.setter
     def date(self, value):
+        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+            raise ValueError("Date Prepared must be of the format CCYY-MM-DD")
         self._data["Date Prepared"] = value
 
     @property
@@ -63,7 +66,7 @@ class Form(Section):
 
     @report_type.setter
     def report_type(self, value):
-        if value not in ("NEW", "UPDATE"):
+        if value.upper() not in ("NEW", "UPDATE"):
             raise ValueError("Report type can only be set to 'NEW' or 'UPDATE'")
         self._data["Report Type"] = value
 

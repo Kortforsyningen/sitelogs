@@ -66,7 +66,7 @@ class SiteIdentification(Section):
 
     @IERS_number.setter
     def IERS_number(self, value):
-        if not re.match(r"^[A-Z0-9]{9}$", value):
+        if not re.match(r"^[A-Z0-9]{9}$", value) or value == "":
             raise ValueError("The IERS DOMES Number must be 9 characters long!")
         self._data["IERS DOMES Number"] = value
 
@@ -144,7 +144,7 @@ class SiteIdentification(Section):
 
     @bedrock_type.setter
     def bedrock_type(self, value):
-        if not value == "IGNEOUS" or value == "METAMORPHIC" or value == "SEDIMENTARY":
+        if value.upper() not in ("IGNEOUS", "METAMORPHIC", "SEDIMENTARY"):
             raise ValueError(
                 "The Bedrock Type must be IGNEOUS, METAMORPHIC or SEDIMENTARY"
             )
@@ -156,7 +156,7 @@ class SiteIdentification(Section):
 
     @bedrock_condition.setter
     def bedrock_condition(self, value):
-        if not value == "FRESH" or value == "JOINTED" or value == "WEATHERED":
+        if value.upper() not in ("FRESH", "JOINTED", "WEATHERED"):
             raise ValueError(
                 "The Bedrock Condition must be FRESH, JOINTED or WEATHERED"
             )
@@ -168,12 +168,7 @@ class SiteIdentification(Section):
 
     @fracture.setter
     def fracture(self, value):
-        if (
-            not value == "1-10 cm"
-            or value == "11-50 cm"
-            or value == "51-200 cm"
-            or value == "over 200 cm"
-        ):
+        if value not in ("1-10 cm", "11-50 cm", "51-200 cm", "over 200 cm"):
             raise ValueError(
                 "The Fracture Spacing must be in the ranges 1-10 cm, 11-50 cm, 51-200 cm or over 200 cm"
             )

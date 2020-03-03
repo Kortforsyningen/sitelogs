@@ -24,6 +24,7 @@ class SiteLocation(Section):
         return data
 
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
 
     @property
@@ -117,10 +118,13 @@ class SiteLocation(Section):
     @property
     def elevation(self):
         value = self._data["Elevation (m,ellips.)"]
-        if re.match(r"^[\d\.]+$", value):
-            value = "{:7.1f}".format(float(value))
-        elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
-            value = "{:7.1f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
+        if type(value) is str:
+            if re.match(r"^[\d\.]+$", value):
+                value = "{:7.1f}".format(float(value))
+            elif re.match(r"^[\d\.]+\s*[^0-9.]+$", value):
+                value = "{:7.1f}".format(float(re.sub(r"\s*[^0-9.]+", "", value)))
+        elif type(value) is float:
+            value = "{:7.1f}".format(value)
         return value
 
     @elevation.setter

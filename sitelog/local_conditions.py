@@ -27,7 +27,7 @@ class LocalCondition(Section):
 
     def _template_dict(self):
         data = {
-            "Source": "",
+            "Model": "",
             "Observed Degradations": "(SN RATIO/DATA GAPS/etc)",
             "Effective Dates": "(CCYY-MM-DD/CCYY-MM-DD)",
             "Additional Information": "(multiple lines)",
@@ -55,11 +55,11 @@ class LocalCondition(Section):
 
     @property
     def source(self):
-        return self._data["Source"]
+        return self._data["Model"]
 
     @source.setter
     def source(self, value):
-        self._data["Source"] = value
+        self._data["Model"] = value
 
     @property
     def obs_degradation(self):
@@ -75,6 +75,8 @@ class LocalCondition(Section):
 
     @dates.setter
     def dates(self, value):
+        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+            raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
         self._data["Effective Dates"] = value
 
     @property

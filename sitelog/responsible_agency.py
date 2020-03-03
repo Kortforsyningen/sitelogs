@@ -8,6 +8,7 @@ from sitelog import _format_string
 
 class ResponsibleAgency(Section):
     def __init__(self):
+        super().__init__()
         self._data = self._template_dict()
 
     def _template_dict(self):
@@ -68,6 +69,7 @@ class ResponsibleAgency(Section):
        Telephone (secondary)  : {self.secondary_phone}
        Fax                    : {self.fax}
        E-mail                 : {self.email}"""
+
         return section_text
 
 
@@ -101,6 +103,10 @@ class ResponsibleAgencies(SectionListHeader):
 
     @abbreviation.setter
     def abbreviation(self, value):
+        if len(value) > 10:
+            raise ValueError(
+                "Preferred Abbreviation must be no longer than 10 characters"
+            )
         self._data["Preferred Abbreviation"] = value
 
     @property
@@ -132,6 +138,8 @@ class ResponsibleAgencies(SectionListHeader):
      Agency                   : {self.agency}
      Preferred Abbreviation   : {self.abbreviation}
      Mailing Address          : {self.address}"""
+
+        # create the two "subsections" needed in this sections
         s.append(self.subsection_type())
         s.append(self.subsection_type())
         if self._subsections:

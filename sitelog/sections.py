@@ -11,6 +11,7 @@ class Section:
         self.title = ""
         self.subtitle = ""
         self._data = {}
+        self.freeform = []
 
     def read_lines(self, lines):
         """
@@ -35,6 +36,9 @@ class Section:
                 self._data[previous_key] = (
                     self._data[previous_key] + " " + value.strip()
                 )
+
+            if line_type == "freeform":
+                self.freeform.append(line)
 
             if line_type == "subsectionheader" or line_type == "subsubsectionheader":
                 if line_type == "subsectionheader":
@@ -140,7 +144,8 @@ class SectionListHeader(Section):
                 sections.append(line_no)
             # index til subsection header
         self.header = Section()
-        self.header.read_lines(lines[0 : sections[0]] + [lines[-3]])
+
+        self.header.read_lines(lines[0 : sections[0]] + lines[-3:])
 
         for sec_no, subsection in enumerate(sections):
             s = self.subsection_type()

@@ -48,8 +48,11 @@ class SiteLog:
             for line_no, line in enumerate(lines):
                 if _determine_line_type(line) == "sectionheader":
                     sections.append(line_no)
+            for line in lines[0:4]:
+                if re.findall(r"\s+([A-Z0-9]{4,9})", line):
+                    self.header.code = re.findall(r"\s+([A-Z0-9]{4,9})", line)[0]
+                    break
 
-            self.header.code = re.findall(r"\s+([A-Z0-9]{4})", lines[0])[0]
             self.form.read_lines(lines[sections[0] : sections[1]])
             self.site_identification.read_lines(lines[sections[1] : sections[2]])
             self.site_location.read_lines(lines[sections[2] : sections[3]])

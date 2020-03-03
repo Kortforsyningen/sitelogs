@@ -1,3 +1,5 @@
+import re
+
 from sitelog.sections import (
     SubSection,
     SectionList,
@@ -22,6 +24,8 @@ class Effect(Section):
 
     @date.setter
     def date(self, value):
+        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+            raise ValueError("Date must be of the format CCYY-MM-DD")
         self._data["Date"] = value
 
     @property

@@ -33,6 +33,10 @@ class GnssReceiver(Section):
 
     @receiver_type.setter
     def receiver_type(self, value):
+        if len(value) > 20:
+            raise ValueError(
+                "Receiver Type from rcvr_ant.tab must be no longer than 20 characters long"
+            )
         self._data["Receiver Type"] = value
 
     @property

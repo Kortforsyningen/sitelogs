@@ -383,3 +383,24 @@
      Additional Information   : (multiple lines)
      Antenna Graphics with Dimensions
 
+AOAD/M_B  (Allen Osborne Design)
+
+                         -----
+                     /     +     \                      <-- 0.096 L2
+                    |      +      |                     <-- 0.078 L1
+  +-----------------+-------------+------------------+  <-- 0.070 TCR
+  |                                                  |
+  |                                                  |
+  |                                                  |
+  |                                                  |
+  |                                                  |
+  +-----------------+------x------+------------------+  <-- 0.000 ARP
+                    |             |
+                    +-------------+                     <-- -0.011
+                          ||  ||
+
+  <--                    0.351                     -->
+
+
+ARP: Antenna Reference Point
+

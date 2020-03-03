@@ -14,11 +14,11 @@ def _determine_line_type(line):
         line_type = "subsectionheader"
     elif re.match(r"^\d{1,2}\.\d{1,2}\.[\dx]{1,2}\s", line):
         line_type = "subsubsectionheader"
-    elif re.match(r"^\s+.*\s:\s.+$", line):
+    elif re.match(r"^\s+.*\s:.*$", line):
         if re.match(r"^\s*:\s.*$", line):
             line_type = "key_value_continued"
-        elif re.match(r"^\s+[\S ]+\s:\s+$", line):
-            line_type = "key_value_empty"
+        # elif re.match(r"^\s+[\S ]+\s:\s*$", line):
+        #    line_type = "key_value_empty"
         else:
             line_type = "key_value"
     else:

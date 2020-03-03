@@ -36,6 +36,8 @@ class CollocationInstrument(SubSection):
 
     @status.setter
     def status(self, value):
+        if value.upper() not in ("PERMANENT", "MOBILE"):
+            raise ValueError("Status must either be PERMANENT or MOBILE")
         self._data["Status"] = value
 
     @property
@@ -44,6 +46,8 @@ class CollocationInstrument(SubSection):
 
     @effective_dates.setter
     def effective_dates(self, value):
+        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+            raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
         self._data["Effective Dates"] = value
 
     @property
