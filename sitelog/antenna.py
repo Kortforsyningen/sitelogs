@@ -177,7 +177,7 @@ class AntennaType(SubSection):
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
-4.{self.subtitle}  Antenna Type             : {self.antenna_type}
+4.{self.subtitle}{_format_string("Antenna Type", "subsectitle", len(str(self.subtitle)))}{self.antenna_type}
      Serial Number            : {self.serial_number}
      Antenna Reference Point  : {self.antenna_reference}
      Marker->ARP Up Ecc. (m)  : {self.up}

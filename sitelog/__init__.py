@@ -15,10 +15,10 @@ def _determine_line_type(line):
     elif re.match(r"^\d{1,2}\.\d{1,2}\.[\dx]{1,2}\s", line):
         line_type = "subsubsectionheader"
     elif re.match(r"^\s+.*\s:.*$", line):
-        if re.match(r"^\s*:\s.*$", line):
+        if re.match(r"^\s*:\s.+$", line):
             line_type = "key_value_continued"
-        # elif re.match(r"^\s+[\S ]+\s:\s*$", line):
-        #    line_type = "key_value_empty"
+        elif re.match(r"^\s+[\S ]+\s:$", line):
+            line_type = "key_value_empty"
         else:
             line_type = "key_value"
     else:
@@ -27,7 +27,7 @@ def _determine_line_type(line):
     return line_type
 
 
-def _format_string(line, line_type):
+def _format_string(line, line_type, num_char = None):
     """
     formatting lines to sitelog format 
 
@@ -50,10 +50,14 @@ def _format_string(line, line_type):
         formatted_string = "{:6}".format(line)
 
     if line_type == "subsectitle":
-        formatted_string = "{:24}{:2}".format(line, ":")
+        if not num_char:
+            num_char = 0
+        
+        formatted_string = "{:{}}{:25}{:2}".format("", 3-num_char, line, ":")
 
     if line_type == "subsubsecnr":
-        formatted_string = "{:6}".format(line)
+        num_char = len(line)
+        formatted_string = "{:{}}".format(line, 11-num_char)
 
     if line_type == "subsubsectitle":
         if len(line) < 23:

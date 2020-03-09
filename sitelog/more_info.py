@@ -98,6 +98,16 @@ class MoreInfo(Section):
     def additional(self, value):
         self._data["Additional Information"] = value
 
+    @property
+    def graphic(self):
+        return self.freeform
+
+    @graphic.setter
+    def graphic(self, value):
+        if value is str:
+            value = [value]
+        self.freeform = ["Antenna Graphics with Dimensions"] + [value]
+
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
@@ -114,10 +124,12 @@ class MoreInfo(Section):
        Monument Description   : {self.monument}
        Site Pictures          : {self.site_pictures}
      Additional Information   : {self.additional}
+     Antenna Graphics with Dimensions
 """
-        for i, line in enumerate(self.freeform):
+        for i, line in enumerate(self.graphic):
             if re.findall("Antenna Graphics with Dimensions", line):
-                for line in self.freeform[i:]:
-                    section_text += "\n" + line
+                if len(self.graphic) > i:
+                    for line in self.graphic[i+1:]:
+                        section_text += "\n" + line
 
         return section_text

@@ -114,7 +114,7 @@ class GnssReceiver(Section):
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
-3.{self.subtitle}  Receiver Type            : {self.receiver_type}
+3.{self.subtitle}{_format_string("Receiver Type", "subsectitle", len(str(self.subtitle)))}{self.receiver_type}
      Satellite System         : {self.sat_sys}
      Serial Number            : {self.serial}
      Firmware Version         : {self.firmware}

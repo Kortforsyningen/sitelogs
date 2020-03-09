@@ -17,7 +17,7 @@ from sitelog.responsible_agency import ResponsibleAgency
 
 if __name__ == "__main__":
     # Læs fra en eksisterende sitelog
-    sitelog = SiteLog("onsa_20191104.log")
+    sitelog = SiteLog("fyha_20161220.log")
     # ændr noget
     sitelog.header.code = "FLAF"
     sitelog.collocation[0].status = "Mobile"
@@ -65,6 +65,27 @@ if __name__ == "__main__":
     log2.contact_agency[1].contact_name = "SDFE1"
     log2.responsible_agency[0] = ResponsibleAgency()
     log2.responsible_agency[0].fax = "13212312"
+    log2.more_info.graphic = """
+AOAD/M_B  (Allen Osborne Design)
+
+                         -----
+                     /     +     \                      <-- 0.096 L2
+                    |      +      |                     <-- 0.078 L1
+  +-----------------+-------------+------------------+  <-- 0.070 TCR
+  |                                                  |
+  |                                                  |
+  |                                                  |
+  |                                                  |
+  |                                                  |
+  +-----------------+------x------+------------------+  <-- 0.000 ARP
+                    |             |
+                    +-------------+                     <-- -0.011
+                          ||  ||
+
+  <--                    0.351                     -->
+
+
+ARP: Antenna Reference Point"""
     # Det ville gøre det lettere at bruge koden hvis man kunne gøre sådan her:
     #
     #  log2.gnss[0] = GnssReceiver(

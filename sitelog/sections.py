@@ -31,6 +31,11 @@ class Section:
                 self._data[key] = value
                 previous_key = key
 
+            if line_type == "key_value_empty":
+                key = re.sub(r"\:", "", line).strip()
+                self._data[key] = ""
+                previous_key = key
+
             if line_type == "key_value_continued":
                 (key, value) = line.split(" : ")
                 self._data[previous_key] = (

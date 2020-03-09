@@ -59,7 +59,7 @@ class Frequency(SubSection):
     def string(self):
         self.notes = _format_string(self.notes, "multilinevalue")
         section_text = f"""
-6.{self.subtitle}  Standard Type            : {self.standard_type}
+6.{self.subtitle}{_format_string("Standard Type", "subsectitle", len(str(self.subtitle)))}{self.standard_type}
        Input Frequency        : {self.input_freq}
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}

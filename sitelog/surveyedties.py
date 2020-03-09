@@ -129,7 +129,7 @@ class Tie(SubSection):
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
-5.{self.subtitle}  Tied Marker Name         : {self.marker_name}
+5.{self.subtitle}{_format_string("Tied Marker Name", "subsectitle", len(str(self.subtitle)))}{self.marker_name}
      Tied Marker Usage        : {self.marker_usage}
      Tied Marker CDP Number   : {self.marker_cdp}
      Tied Marker DOMES Number : {self.marker_domes}

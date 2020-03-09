@@ -61,7 +61,7 @@ class CollocationInstrument(SubSection):
     def string(self):
         self.notes = _format_string(self.notes, "multilinevalue")
         section_text = f"""
-7.{self.subtitle}  Instrumentation Type     : {self.instrumentation_type}
+7.{self.subtitle}{_format_string("Instrumentation Type", "subsectitle", len(str(self.subtitle)))}{self.instrumentation_type}
        Status                 : {self.status}
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
