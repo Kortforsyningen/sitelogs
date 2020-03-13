@@ -4,6 +4,32 @@ from sitelog import _format_string
 
 
 class SiteIdentification(Section):
+    def __init__(
+        self, site_name="", site_code="XXXX", inscription="", IERS_number="", CDP_number="", monument="", monument_h="",
+        foundation="", foundation_depth="", marker="", date="", geologic="", bedrock_type="", bedrock_condition="",
+        fracture="", fault="", distance="", additional=""
+        ):
+        self._data = self._template_dict()
+        self.site_name = site_name
+        self.site_code = site_code
+        self.inscription = inscription
+        self.IERS_number = IERS_number
+        self.CDP_number = CDP_number
+        self.monument = monument
+        self.monument_h = monument_h
+        self.foundation = foundation
+        self.foundation_depth = foundation_depth
+        self.marker = marker
+        self.date = date
+        self.geologic = geologic
+        self.bedrock_type = bedrock_type
+        self.bedrock_condition = bedrock_condition
+        self.fracture = fracture
+        self.fault = fault
+        self.distance = distance
+        self.additional = additional
+
+
     def _template_dict(self):
         """
         We use the keys from the site log as keys in the data dict to ease
@@ -31,8 +57,6 @@ class SiteIdentification(Section):
         }
         return data
 
-    def __init__(self):
-        self._data = self._template_dict()
 
     @property
     def site_name(self):
@@ -48,7 +72,7 @@ class SiteIdentification(Section):
 
     @site_code.setter
     def site_code(self, value):
-        if not re.match(r"^[A-Z0-9]{4}$", value):
+        if not (re.match(r"^[A-Z0-9]{4}$", value) or value==""):
             raise ValueError("The Four Character ID *must* be 4 characters long!")
         self._data["Four Character ID"] = value
 
@@ -66,7 +90,7 @@ class SiteIdentification(Section):
 
     @IERS_number.setter
     def IERS_number(self, value):
-        if not re.match(r"^[A-Z0-9]{9}$", value) or value == "":
+        if not (re.match(r"^[A-Z0-9]{9}$", value) or value == ""):
             raise ValueError("The IERS DOMES Number must be 9 characters long!")
         self._data["IERS DOMES Number"] = value
 
@@ -76,7 +100,7 @@ class SiteIdentification(Section):
 
     @CDP_number.setter
     def CDP_number(self, value):
-        if not re.match(r"^[A-Z0-9]{4}$", value) or value == "":
+        if not (re.match(r"^[A-Z0-9]{4}$", value) or value == ""):
             raise ValueError("The CDP Number must be 4 characters long!")
         self._data["CDP Number"] = value
 
@@ -126,7 +150,7 @@ class SiteIdentification(Section):
 
     @date.setter
     def date(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date Installed must be of the format (CCYY-MM-DDThh:mmZ)")
         self._data["Date Installed"] = value
 
@@ -144,7 +168,7 @@ class SiteIdentification(Section):
 
     @bedrock_type.setter
     def bedrock_type(self, value):
-        if value.upper() not in ("IGNEOUS", "METAMORPHIC", "SEDIMENTARY"):
+        if value.upper() not in ("IGNEOUS", "METAMORPHIC", "SEDIMENTARY", ""):
             raise ValueError(
                 "The Bedrock Type must be IGNEOUS, METAMORPHIC or SEDIMENTARY"
             )
@@ -156,7 +180,7 @@ class SiteIdentification(Section):
 
     @bedrock_condition.setter
     def bedrock_condition(self, value):
-        if value.upper() not in ("FRESH", "JOINTED", "WEATHERED"):
+        if value.upper() not in ("FRESH", "JOINTED", "WEATHERED", ""):
             raise ValueError(
                 "The Bedrock Condition must be FRESH, JOINTED or WEATHERED"
             )
@@ -168,7 +192,7 @@ class SiteIdentification(Section):
 
     @fracture.setter
     def fracture(self, value):
-        if value not in ("1-10 cm", "11-50 cm", "51-200 cm", "over 200 cm"):
+        if value not in ("1-10 cm", "11-50 cm", "51-200 cm", "over 200 cm", ""):
             raise ValueError(
                 "The Fracture Spacing must be in the ranges 1-10 cm, 11-50 cm, 51-200 cm or over 200 cm"
             )

@@ -60,7 +60,7 @@ class Section:
                 previous_key = key
 
 
-class SectionList:
+class SectionList(Section):
     """
     class for sections with subsections
     """
@@ -75,15 +75,20 @@ class SectionList:
 
     def __setitem__(self, index, value):
         try:
-            value.subtitle = index + 1
+            value.subtitle = str(index + 1)
             self._subsections[index] = value
         except IndexError:
             if index == len(self._subsections):
                 if self.section_type == "subsectionheader":
-                    value.subtitle = index + 1
+                    value.subtitle = str(index + 1)
                 else:
                     value.subtitle = "x."
                 self._subsections.append(value)
+
+    def add_section(self, value):
+        index = len(self._subsections)
+        self._subsections.append(value)
+        value.subtitle = str(index + 1)
 
     def read_lines(self, lines):
         sections = []
@@ -101,7 +106,7 @@ class SectionList:
                 s.read_lines(lines[subsection : sections[sec_no + 1]])
 
             if self.section_type == "subsectionheader":
-                s.subtitle = sec_no + 1
+                s.subtitle = str(sec_no + 1)
 
             self._subsections.append(s)
 
@@ -112,32 +117,33 @@ class SubSection(Section):
         super().__init__()
 
 
-class SectionListHeader(Section):
+class SectionListHeader(SectionList):
     """
     class for sections with subsections (Primary and secondary contacts) 
     and header values
     """
 
     def __init__(self):
-        self._subsections = []
+        super().__init__()
+        #self._subsections = []
         self.header = {}
-        self.subsection_type = None
-        self.section_type = ""
+        #self.subsection_type = None
+        #self.section_type = ""
 
-    def __getitem__(self, index):
-        return self._subsections[index]
+    # def __getitem__(self, index):
+    #     return self._subsections[index]
 
-    def __setitem__(self, index, value):
-        try:
-            value.subtitle = index + 1
-            self._subsections[index] = value
-        except IndexError:
-            if index == len(self._subsections):
-                if self.section_type == "subsectionheader":
-                    value.subtitle = index + 1
-                else:
-                    value.subtitle = "x."
-                self._subsections.append(value)
+    # def __setitem__(self, index, value):
+    #     try:
+    #         value.subtitle = index + 1
+    #         self._subsections[index] = value
+    #     except IndexError:
+    #         if index == len(self._subsections):
+    #             if self.section_type == "subsectionheader":
+    #                 value.subtitle = index + 1
+    #             else:
+    #                 value.subtitle = "x."
+    #             self._subsections.append(value)
 
     def read_lines(self, lines):
         sections = []
@@ -161,6 +167,6 @@ class SectionListHeader(Section):
                 s.read_lines(lines[subsection : sections[sec_no + 1]])
 
             if self.section_type == "subsectionheader":
-                s.subtitle = sec_no + 1
+                s.subtitle = str(sec_no + 1)
 
             self._subsections.append(s)

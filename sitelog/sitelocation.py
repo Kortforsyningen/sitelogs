@@ -5,6 +5,24 @@ from sitelog import _format_string
 
 
 class SiteLocation(Section):
+    def __init__(
+        self, city="", state="", country="", tectonic_plate="", x="", y="", z="", latitude="",
+        longitude="", elevation="", additional=""
+        ):
+        super().__init__()
+        self._data = self._template_dict()
+        self.city = city
+        self.state = state
+        self.country = country
+        self.tectonic_plate = tectonic_plate
+        self.x = x
+        self.y = y
+        self.z = z
+        self.latitude = latitude
+        self.longitude = longitude
+        self.elevation = elevation
+        self.additional = additional
+
     def _template_dict(self):
 
         data = {
@@ -23,9 +41,7 @@ class SiteLocation(Section):
         }
         return data
 
-    def __init__(self):
-        super().__init__()
-        self._data = self._template_dict()
+
 
     @property
     def city(self):

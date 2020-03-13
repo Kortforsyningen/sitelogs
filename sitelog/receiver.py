@@ -9,9 +9,22 @@ from sitelog import _format_string
 
 
 class GnssReceiver(Section):
-    def __init__(self):
+    def __init__(
+        self, receiver_type="", sat_sys="", serial="", firmware="", cutoff="",
+        date_installed="", date_removed="", temperature="", additional=""
+        ):
         super().__init__()
         self._data = self._template_dict()
+        self.receiver_type = receiver_type
+        self.sat_sys = sat_sys
+        self.serial = serial
+        self.firmware = firmware
+        self.cutoff = cutoff
+        self.date_installed = date_installed
+        self.date_removed = date_removed
+        self.temperature = temperature
+        self.additional = additional
+
 
     def _template_dict(self):
         data = {
@@ -81,7 +94,7 @@ class GnssReceiver(Section):
 
     @date_installed.setter
     def date_installed(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date Installed must be of the format (CCYY-MM-DDThh:mmZ)")
         self._data["Date Installed"] = value
 
@@ -91,7 +104,7 @@ class GnssReceiver(Section):
 
     @date_removed.setter
     def date_removed(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date Removed must be of the format (CCYY-MM-DDThh:mmZ)")
         self._data["Date Removed"] = value
 

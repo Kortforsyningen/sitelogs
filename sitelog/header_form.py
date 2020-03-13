@@ -19,9 +19,14 @@ class Header:
 
 
 class Form(Section):
-    def __init__(self):
+    def __init__(self, prepared_by="", date ="2019-12-12", report_type = "NEW", previous_log = "", changed_sections = ""):
         super().__init__()
         self._data = self._template_dict()
+        self.prepared_by = prepared_by
+        self.date = date
+        self.report_type = report_type
+        self.previous_log = previous_log
+        self.changed_sections = changed_sections
 
     def _template_dict(self):
         data = {
@@ -56,7 +61,7 @@ class Form(Section):
 
     @date.setter
     def date(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date Prepared must be of the format CCYY-MM-DD")
         self._data["Date Prepared"] = value
 
