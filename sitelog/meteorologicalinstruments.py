@@ -21,12 +21,29 @@ gen_title = "Humidity/Pressure/Temp. Sensor Model, Water Vapor Radiometer or Oth
 
 
 class MetInstrument(Section):
-    def __init__(self):
+    def __init__(
+        self, instrument=SensorType.OTHER, model="", manufacturer="", serial_number="", data_interval="", distance_antenna="",
+        accuracy="", aspiration="", height_diff="", calibration_date="", effective_dates="",
+        notes="", other=""
+    ):
         super().__init__()
         self._data = self._template_dict()
-        self.number = None
         self.subsubtitle = ""
+        self.number =""
         self.title = gen_title
+        self.instrument = instrument
+        self.model = model
+        self.manufacturer = manufacturer
+        self.serial_number = serial_number
+        self.data_interval = data_interval
+        self.distance_antenna = distance_antenna
+        self.accuracy = accuracy
+        self.aspiration = aspiration
+        self.height_diff = height_diff
+        self.calibration_date = calibration_date
+        self.effective_dates = effective_dates
+        self.notes = notes
+        self.other = other
 
     def _template_dict(self):
         data = {
@@ -54,18 +71,18 @@ class MetInstrument(Section):
             raise ValueError("Input needs to be a SensorType()")
         else:
             self.title = value.value
-            if value.value == "HUMIDITY":
-                self.subtitle = "1."
+            if value.name == "HUMIDITY":
+                self.subsubtitle = "1."
             elif value.name == "PRESSURE":
-                self.subtitle = "2."
+                self.subsubtitle = "2."
             elif value.name == "TEMPERATURE":
-                self.subtitle = "3."
+                self.subsubtitle = "3."
             elif value.name == "WATERVAPOR":
-                self.subtitle = "4."
+                self.subsubtitle = "4."
             elif value.name == "OTHER":
-                self.subtitle = "5."
+                self.subsubtitle = "5."
             else:
-                self.subtitle = "x."
+                self.subsubtitle = "x."
 
     @property
     def other(self):
@@ -145,7 +162,7 @@ class MetInstrument(Section):
 
     @calibration_date.setter
     def calibration_date(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Calibration date must be of the format CCYY-MM-DDT")
         self._data["Calibration date"] = value
 
@@ -155,7 +172,7 @@ class MetInstrument(Section):
 
     @effective_dates.setter
     def effective_dates(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
         self._data["Effective Dates"] = value
 
@@ -168,17 +185,17 @@ class MetInstrument(Section):
         self._data["Notes"] = value
 
     def string(self):
-        self.subsubtitle = _format_string(self.subsubtitle, "subsubsecnr")
+        self.number = _format_string(self.number, "subsubsecnr")
         self.title = _format_string(self.title, "subsubsectitle")
         self.notes = _format_string(self.notes, "multilinevalue")
         self.model = _format_string(self.model, "multilinevalue")
-        if self.subtitle == "5.":
+        if self.subsubtitle == "5.":
             section_text = f"""
-{self.subsubtitle}{self.title}{self.model}
+{self.number}{self.title}{self.model}
 """
-        elif self.subtitle == "2.":
+        elif self.subsubtitle == "2.":
             section_text = f"""
-{self.subsubtitle}{self.title}{self.model}
+{self.number}{self.title}{self.model}
        Manufacturer           : {self.manufacturer}
        Serial Number          : {self.serial_number}
        Data Sampling Interval : {self.data_interval}
@@ -188,9 +205,9 @@ class MetInstrument(Section):
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
 """
-        elif self.subtitle == "4.":
+        elif self.subsubtitle == "4.":
             section_text = f"""
-{self.subsubtitle}{self.title}{self.model}
+{self.number}{self.title}{self.model}
        Manufacturer           : {self.manufacturer}
        Serial Number          : {self.serial_number}
        Distance to Antenna    : {self.distance_antenna}
@@ -201,7 +218,7 @@ class MetInstrument(Section):
 """
         else:
             section_text = f"""
-{self.subsubtitle}{self.title}{self.model}
+{self.number}{self.title}{self.model}
        Manufacturer           : {self.manufacturer}
        Serial Number          : {self.serial_number}
        Data Sampling Interval : {self.data_interval}
@@ -228,26 +245,26 @@ class Meteorological(SectionList):
 8.   Meteorological Instrumentation
 """
         if self._subsections:
-            self._subsections = sorted(self._subsections, key=lambda x: x.subtitle)
+            self._subsections = sorted(self._subsections, key=lambda x: x.subsubtitle)
             for subsection in self._subsections:
-                self.list_subtitles.append(subsection.subtitle)
+                self.list_subtitles.append(subsection.subsubtitle)
                 # hvis intet eller ugyldigt instrument er givet
                 if subsection.title == gen_title:
                     subsection.subtitle = "x."
                 if subsection.subtitle == "x.":
                     subsection.subsubtitle = "x"
                 else:
-                    subsection.subsubtitle = str(
-                        self.list_subtitles.count(subsection.subtitle)
+                    subsection.subtitle = str(
+                        self.list_subtitles.count(subsection.subsubtitle)
                     )
-                subsection.subsubtitle = (
-                    "8." + subsection.subtitle + subsection.subsubtitle
+                subsection.number = (
+                    "8." + subsection.subsubtitle + subsection.subtitle
                 )
                 section_text += subsection.string()
         else:
             s = self.subsection_type()
             s.title = gen_title
             s.subtitle = "x."
-            s.subsubtitle = "8." + s.subtitle + "x"
+            s.number = "8." + s.subtitle + "x"
             section_text += s.string()
         return section_text

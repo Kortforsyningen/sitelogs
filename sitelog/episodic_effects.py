@@ -5,11 +5,13 @@ from sitelog.sections import (
     SectionList,
     Section,
 )
-
+from sitelog import _format_string
 
 class Effect(Section):
-    def __init__(self):
+    def __init__(self, date="", event=""):
         self._data = self._template_dict()
+        self.date = date
+        self.event = event
 
     def _template_dict(self):
         data = {
@@ -24,7 +26,7 @@ class Effect(Section):
 
     @date.setter
     def date(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date must be of the format CCYY-MM-DD")
         self._data["Date"] = value
 
@@ -37,6 +39,7 @@ class Effect(Section):
         self._data["Event"] = value
 
     def string(self):
+        self.subsectionheader = _format_string("Date", "subsectitle")
         section_text = f"""
 10.{self.subtitle} Date                     : {self.date}
      Event                    : {self.event}

@@ -19,7 +19,9 @@ class Header:
 
 
 class Form(Section):
-    def __init__(self, prepared_by="", date ="2019-12-12", report_type = "NEW", previous_log = "", changed_sections = ""):
+    def __init__(
+        self, prepared_by="", date ="2019-12-12", report_type = "NEW", previous_log = "", changed_sections = ""
+        ):
         super().__init__()
         self._data = self._template_dict()
         self.prepared_by = prepared_by

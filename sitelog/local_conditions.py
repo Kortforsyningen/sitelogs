@@ -6,6 +6,7 @@ class ConditionTypes(Enum):
     RADIO = "Radio Interferences"
     MULTIPATH = "Multipath Sources"
     OBSTRUCTION = "Signal Obstructions"
+    UNKNOWN = ""
 
 
 from sitelog.sections import (
@@ -19,11 +20,19 @@ gen_title = "Local Condition"
 
 
 class LocalCondition(Section):
-    def __init__(self):
+    def __init__(
+        self, condition =ConditionTypes.UNKNOWN, source="", observed_degradation="", dates="", additional=""
+        ):
         super().__init__()
         self._data = self._template_dict()
         self.title = gen_title
         self.subsubtitle = ""
+        self.number = ""
+        self.condition = condition
+        self.source = source
+        self.obs_degradation = observed_degradation
+        self.dates = dates
+        self.additional = additional
 
     def _template_dict(self):
         data = {
@@ -45,13 +54,13 @@ class LocalCondition(Section):
         else:
             self.title = value.value
             if value.name == "RADIO":
-                self.subtitle = "1."
+                self.subsubtitle = "1."
             elif value.name == "MULTIPATH":
-                self.subtitle = "2."
+                self.subsubtitle = "2."
             elif value.name == "OBSTRUCTION":
-                self.subtitle = "3."
+                self.subsubtitle = "3."
             else:
-                self.subtitle = "x."
+                self.subsubtitle = "x."
 
     @property
     def source(self):
@@ -75,7 +84,7 @@ class LocalCondition(Section):
 
     @dates.setter
     def dates(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
         self._data["Effective Dates"] = value
 
@@ -88,19 +97,19 @@ class LocalCondition(Section):
         self._data["Additional Information"] = value
 
     def string(self):
-        self.subsubtitle = _format_string(self.subsubtitle, "subsubsecnr")
+        self.number = _format_string(self.number, "subsubsecnr")
         self.title = _format_string(self.title, "subsubsectitle")
         self.additional = _format_string(self.additional, "multilinevalue")
-        if self.subtitle == "1." or self.subtitle == "x.":
+        if self.subsubtitle == "1." or self.subsubtitle == "x.":
             section_text = f"""
-{self.subsubtitle}{self.title}{self.source}
+{self.number}{self.title}{self.source}
        Observed Degradations  : {self.obs_degradation}
        Effective Dates        : {self.dates}
        Additional Information : {self.additional}
 """
         else:
             section_text = f"""
-{self.subsubtitle}{self.title}{self.source}
+{self.number}{self.title}{self.source}
        Effective Dates        : {self.dates}
        Additional Information : {self.additional}
 """
@@ -119,19 +128,19 @@ class Conditions(SectionList):
 9.  Local Ongoing Conditions Possibly Affecting Computed Position
 """
         if self._subsections:
-            self._subsections = sorted(self._subsections, key=lambda x: x.subtitle)
+            self._subsections = sorted(self._subsections, key=lambda x: x.subsubtitle)
             for subsection in self._subsections:
-                self.list_subtitles.append(subsection.subtitle)
+                self.list_subtitles.append(subsection.subsubtitle)
                 if subsection.title == gen_title:
                     subsection.subtitle = "x."
-                if subsection.subtitle == "x.":
+                if subsection.subsubtitle == "x.":
                     subsection.subsubtitle = "x"
                 else:
-                    subsection.subsubtitle = str(
-                        self.list_subtitles.count(subsection.subtitle)
+                    subsection.subtitle = str(
+                        self.list_subtitles.count(subsection.subsubtitle)
                     )
-                subsection.subsubtitle = (
-                    "9." + subsection.subtitle + subsection.subsubtitle
+                subsection.number = (
+                    "9." + subsection.subsubtitle + subsection.subtitle
                 )
                 section_text += subsection.string()
         else:

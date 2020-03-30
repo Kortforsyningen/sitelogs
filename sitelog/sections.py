@@ -10,6 +10,7 @@ class Section:
     def __init__(self):
         self.title = ""
         self.subtitle = ""
+        self.subsubtitle =""
         self._data = {}
         self.freeform = []
 
@@ -51,7 +52,7 @@ class Section:
                     line = re.sub(r"^[\d{1,2}\.]+[\dx]{1,2}", "", line)
                     (key, value) = [s.strip() for s in line.split(" : ")]
                 else:
-                    self.subtitle = re.sub(r"^\d{1,2}\.|[\d{1,2}x]\s.*", "", line)
+                    self.subsubtitle = re.sub(r"^\d{1,2}\.|[\d{1,2}x]\s.*", "", line)
                     self.title = re.sub(r"^[\d{1,2}\.]+[\dx]{1,2}\s*|\s*:.*", "", line)
                     line = re.sub(r"^[\d{1,2}\.]+[\dx]{1,2}", "", line)
                     (key, value) = [s.strip() for s in line.split(" : ")]
@@ -75,20 +76,22 @@ class SectionList(Section):
 
     def __setitem__(self, index, value):
         try:
-            value.subtitle = str(index + 1)
+            value.subtitle = str(index + 1)+"."
             self._subsections[index] = value
         except IndexError:
             if index == len(self._subsections):
                 if self.section_type == "subsectionheader":
-                    value.subtitle = str(index + 1)
+                    value.subtitle = str(index + 1)+"."
                 else:
-                    value.subtitle = "x."
+                    value.subtitle = "x"+"."
                 self._subsections.append(value)
 
     def add_section(self, value):
         index = len(self._subsections)
         self._subsections.append(value)
+        value.subtitle =""
         value.subtitle = str(index + 1)
+        print("j")
 
     def read_lines(self, lines):
         sections = []
@@ -115,6 +118,7 @@ class SubSection(Section):
     # Class for subsections of SectionList
     def __init__(self):
         super().__init__()
+        self.subsectionheader =""
 
 
 class SectionListHeader(SectionList):

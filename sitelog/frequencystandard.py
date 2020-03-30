@@ -8,10 +8,16 @@ from sitelog import _format_string
 
 
 class Frequency(SubSection):
-    def __init__(self):
+    def __init__(
+        self, standard_type="", input_freq="", effective_dates="", notes=""
+        ):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
+        self.standard_type= standard_type
+        self.input_freq = input_freq
+        self.effective_dates = effective_dates
+        self.notes = notes
 
     def _template_dict(self):
         data = {
@@ -44,7 +50,7 @@ class Frequency(SubSection):
 
     @effective_dates.setter
     def effective_dates(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
         self._data["Effective Dates"] = value
 
@@ -58,8 +64,9 @@ class Frequency(SubSection):
 
     def string(self):
         self.notes = _format_string(self.notes, "multilinevalue")
+        self.subsectionheader = _format_string("Standard Type", "subsectitle", len(str(self.subtitle)))
         section_text = f"""
-6.{self.subtitle}{_format_string("Standard Type", "subsectitle", len(str(self.subtitle)))}{self.standard_type}
+6.{self.subtitle}{self.subsectionheader}{self.standard_type}
        Input Frequency        : {self.input_freq}
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}

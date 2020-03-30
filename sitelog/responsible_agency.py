@@ -7,9 +7,16 @@ from sitelog import _format_string
 
 
 class ResponsibleAgency(Section):
-    def __init__(self):
+    def __init__(
+        self, contact_name="", primary_phone="", secondary_phone="", fax="", email=""
+        ):
         super().__init__()
         self._data = self._template_dict()
+        self.contact_name = contact_name
+        self.primary_phone = primary_phone
+        self.secondary_phone = secondary_phone
+        self.fax = fax
+        self.email = email
 
     def _template_dict(self):
         data = {
@@ -74,11 +81,15 @@ class ResponsibleAgency(Section):
 
 
 class ResponsibleAgencies(SectionListHeader):
-    def __init__(self):
+    def __init__(self, agency="", abbreviation="", address="", additional=""):
         super().__init__()
         self.subsection_type = ResponsibleAgency
         self.section_type = "subsectionheader"  # subsection
         self._data = self._template_dict()
+        self.agency = agency
+        self.abbreviation = abbreviation
+        self.address = address
+        self.additional = additional
 
     def _template_dict(self):
         data = {

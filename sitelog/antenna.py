@@ -8,9 +8,27 @@ from sitelog import _format_string
 
 
 class AntennaType(SubSection):
-    def __init__(self):
+    def __init__(
+        self, antenna_type="", serial_number="", antenna_reference="", up="", north="",
+        east="", north_alignment="", radome_type="", radome_serial="", cable_type="",
+        cable_length="", date_installed="",date_removed="", additional=""
+        ):
         super().__init__()
         self._data = self._template_dict()
+        self.antenna_type = antenna_type
+        self.serial_number = serial_number
+        self.antenna_reference = antenna_reference
+        self.up = up
+        self.north = north
+        self.east = east
+        self.north_alignment = north_alignment
+        self.radome_type = radome_type
+        self.radome_serial = radome_serial
+        self.cable_type = cable_type
+        self.cable_length = cable_length
+        self.date_installed = date_installed
+        self.date_removed = date_removed
+        self.additional = additional
 
     def _template_dict(self):
         data = {
@@ -152,7 +170,7 @@ class AntennaType(SubSection):
 
     @date_installed.setter
     def date_installed(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date Installed must be of the format (CCYY-MM-DDThh:mmZ)")
         self._data["Date Installed"] = value
 
@@ -162,7 +180,7 @@ class AntennaType(SubSection):
 
     @date_removed.setter
     def date_removed(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date Removed must be of the format (CCYY-MM-DDThh:mmZ)")
         self._data["Date Removed"] = value
 
@@ -176,8 +194,9 @@ class AntennaType(SubSection):
 
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
+        self.subsectionheader = _format_string("Antenna Type", "subsectitle", len(str(self.subtitle)))
         section_text = f"""
-4.{self.subtitle}{_format_string("Antenna Type", "subsectitle", len(str(self.subtitle)))}{self.antenna_type}
+4.{self.subtitle}{self.subsectionheader}{self.antenna_type}
      Serial Number            : {self.serial_number}
      Antenna Reference Point  : {self.antenna_reference}
      Marker->ARP Up Ecc. (m)  : {self.up}

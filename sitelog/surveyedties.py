@@ -8,10 +8,24 @@ from sitelog import _format_string
 
 
 class Tie(SubSection):
-    def __init__(self):
+    def __init__(
+        self, marker_name="", marker_usage="", marker_cdp="", marker_domes="", dx="",
+        dy="", dz="", accuracy="", method="", date_measured="", additional=""
+        ):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
+        self.marker_name = marker_name
+        self.marker_usage = marker_usage
+        self.marker_cdp = marker_cdp
+        self.marker_domes = marker_domes
+        self.dx = dx
+        self.dy = dy
+        self.dz = dz
+        self.accuracy = accuracy
+        self.method = method
+        self.date_measured = date_measured
+        self.additional = additional
 
     def _template_dict(self):
         data = {
@@ -114,7 +128,7 @@ class Tie(SubSection):
 
     @date_measured.setter
     def date_measured(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Date Measured must be of the format (CCYY-MM-DDThh:mmZ)")
         self._data["Date Measured"] = value
 
@@ -128,8 +142,9 @@ class Tie(SubSection):
 
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
+        self.subsectionheader = _format_string("Tied Marker Name", "subsectitle", len(str(self.subtitle)))
         section_text = f"""
-5.{self.subtitle}{_format_string("Tied Marker Name", "subsectitle", len(str(self.subtitle)))}{self.marker_name}
+5.{self.subtitle}{self.subsectionheader}{self.marker_name}
      Tied Marker Usage        : {self.marker_usage}
      Tied Marker CDP Number   : {self.marker_cdp}
      Tied Marker DOMES Number : {self.marker_domes}

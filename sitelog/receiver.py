@@ -8,7 +8,7 @@ from sitelog.sections import (
 from sitelog import _format_string
 
 
-class GnssReceiver(Section):
+class GnssReceiver(SubSection):
     def __init__(
         self, receiver_type="", sat_sys="", serial="", firmware="", cutoff="",
         date_installed="", date_removed="", temperature="", additional=""
@@ -125,9 +125,10 @@ class GnssReceiver(Section):
         self._data["Additional Information"] = value
 
     def string(self):
+        self.subsectionheader = _format_string("Receiver Type", "subsectitle", len(str(self.subtitle)))
         self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
-3.{self.subtitle}{_format_string("Receiver Type", "subsectitle", len(str(self.subtitle)))}{self.receiver_type}
+3.{self.subtitle}{self.subsectionheader}{self.receiver_type}
      Satellite System         : {self.sat_sys}
      Serial Number            : {self.serial}
      Firmware Version         : {self.firmware}

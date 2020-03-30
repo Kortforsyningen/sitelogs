@@ -8,10 +8,16 @@ from sitelog import _format_string
 
 
 class CollocationInstrument(SubSection):
-    def __init__(self):
+    def __init__(
+        self, instrumentation_type="", status="", effective_dates="", notes=""
+        ):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
+        self.instrumentation_type = instrumentation_type
+        self.status = status
+        self.effective_dates = effective_dates
+        self.notes = notes
 
     def _template_dict(self):
         data = {
@@ -36,7 +42,7 @@ class CollocationInstrument(SubSection):
 
     @status.setter
     def status(self, value):
-        if value.upper() not in ("PERMANENT", "MOBILE"):
+        if value.upper() not in ("PERMANENT", "MOBILE", ""):
             raise ValueError("Status must either be PERMANENT or MOBILE")
         self._data["Status"] = value
 
@@ -46,7 +52,7 @@ class CollocationInstrument(SubSection):
 
     @effective_dates.setter
     def effective_dates(self, value):
-        if not re.match(r"^\d{4}\-\d\d\-\d\d", value):
+        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
             raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
         self._data["Effective Dates"] = value
 
@@ -59,9 +65,10 @@ class CollocationInstrument(SubSection):
         self._data["Notes"] = value
 
     def string(self):
+        self.subsectionheader = _format_string("Instrumentation Type", "subsectitle", len(str(self.subtitle)))
         self.notes = _format_string(self.notes, "multilinevalue")
         section_text = f"""
-7.{self.subtitle}{_format_string("Instrumentation Type", "subsectitle", len(str(self.subtitle)))}{self.instrumentation_type}
+7.{self.subtitle}{self.subsectionheader}{self.instrumentation_type}
        Status                 : {self.status}
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}

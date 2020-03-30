@@ -4,9 +4,22 @@ from sitelog import _format_string
 
 
 class MoreInfo(Section):
-    def __init__(self):
+    def __init__(
+        self, primary_center="",secondary_center="", info_url="", site_map="",
+        site_diagram="", horizon_mask="", monument="", site_pictures="", additional="", graphic=""
+        ):
         super().__init__()
         self._data = self._template_dict()
+        self.primary_center = primary_center
+        self.secondary_center = secondary_center
+        self.info_url = info_url
+        self.site_map = site_map
+        self.site_diagram = site_diagram
+        self.horizon_mask = horizon_mask
+        self.monument = monument
+        self.site_pictures = site_pictures
+        self.additional = additional
+        self.graphic = graphic
 
     def _template_dict(self):
         """
