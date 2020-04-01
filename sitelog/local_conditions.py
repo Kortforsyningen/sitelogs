@@ -1,5 +1,6 @@
 import re
 from enum import Enum
+from datetime import datetime as dt
 
 
 class ConditionTypes(Enum):
@@ -84,8 +85,23 @@ class LocalCondition(Section):
 
     @dates.setter
     def dates(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
+        if isinstance(value, dt):
+            value = value.strftime("%Y-%m-%d")
+        elif isinstance(value, list):
+            list_dates = []
+            joint = "/"
+            for date in value:
+                list_dates.append(date.strftime("%Y-%m-%d"))
+            value = joint.join(list_dates)
+        elif value == "":
+            pass
+        else:
+            list_dates = value.split("/")
+            for date in list_dates:
+                try:
+                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                except:
+                    raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Effective Dates"] = value
 
     @property
@@ -113,6 +129,7 @@ class LocalCondition(Section):
        Effective Dates        : {self.dates}
        Additional Information : {self.additional}
 """
+        
         return section_text
 
 
@@ -149,4 +166,5 @@ class Conditions(SectionList):
             s.subtitle = "x."
             s.subsubtitle = "9." + s.subtitle + "x"
             section_text += s.string()
+        
         return section_text

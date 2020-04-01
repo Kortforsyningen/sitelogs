@@ -1,4 +1,5 @@
 import re
+from datetime import datetime as dt
 
 from sitelog.sections import (
     SubSection,
@@ -26,8 +27,23 @@ class Effect(Section):
 
     @date.setter
     def date(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Date must be of the format CCYY-MM-DD")
+        if isinstance(value, dt):
+            value = value.strftime("%Y-%m-%d")
+        elif isinstance(value, list):
+            list_dates = []
+            joint = "/"
+            for date in value:
+                list_dates.append(date.strftime("%Y-%m-%d"))
+            value = joint.join(list_dates)
+        elif value == "":
+            pass
+        else:
+            list_dates = value.split("/")
+            for date in list_dates:
+                try:
+                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                except:
+                    raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Date"] = value
 
     @property
@@ -44,6 +60,7 @@ class Effect(Section):
 10.{self.subtitle} Date                     : {self.date}
      Event                    : {self.event}
 """
+        
         return section_text
 
 
@@ -65,4 +82,5 @@ class EpisodicEffects(SectionList):
             s = self.subsection_type()
             s.subtitle = "x"
             section_text += s.string()
+        
         return section_text

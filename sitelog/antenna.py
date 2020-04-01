@@ -5,6 +5,7 @@ from sitelog.sections import (
     SectionList,
 )
 from sitelog import _format_string
+from datetime import datetime as dt
 
 
 class AntennaType(SubSection):
@@ -170,8 +171,26 @@ class AntennaType(SubSection):
 
     @date_installed.setter
     def date_installed(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Date Installed must be of the format (CCYY-MM-DDThh:mmZ)")
+        if isinstance(value, dt):
+            try:
+                value = value.strftime("%Y-%m-%dT%H:%M%Z")
+            except:
+                value = value.strftime("%Y-%m-%d")
+        elif value == "":
+            pass
+        else:
+            datetime_object = None
+            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+
+            for format in time_formats:
+                try:
+                    datetime_object = dt.strptime(value, format)
+                    break
+                except:
+                    continue
+            
+            if datetime_object is None:
+                raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
         self._data["Date Installed"] = value
 
     @property
@@ -180,8 +199,26 @@ class AntennaType(SubSection):
 
     @date_removed.setter
     def date_removed(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Date Removed must be of the format (CCYY-MM-DDThh:mmZ)")
+        if isinstance(value, dt):
+            try:
+                value = value.strftime("%Y-%m-%dT%H:%M%Z")
+            except:
+                value = value.strftime("%Y-%m-%d")
+        elif value == "":
+            pass
+        else:
+            datetime_object = None
+            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+
+            for format in time_formats:
+                try:
+                    datetime_object = dt.strptime(value, format)
+                    break
+                except:
+                    continue
+            
+            if datetime_object is None:
+                raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
         self._data["Date Removed"] = value
 
     @property
@@ -252,4 +289,5 @@ class Antenna(SectionList):
             s = AntennaType()
             s.subtitle = "x"
             section_text += s.string()
+        
         return section_text

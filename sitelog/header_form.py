@@ -1,5 +1,6 @@
 from sitelog.sections import Section
 import re
+from datetime import datetime as dt
 
 
 class Header:
@@ -63,8 +64,15 @@ class Form(Section):
 
     @date.setter
     def date(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Date Prepared must be of the format CCYY-MM-DD")
+        if isinstance(value, dt):
+            value = value.strftime("%Y-%m-%d")
+        elif value == "":
+            pass
+        else:
+            try:
+                datetime_object = dt.strptime(value, '%Y-%m-%d')
+            except:
+                raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Date Prepared"] = value
 
     @property

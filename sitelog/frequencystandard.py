@@ -5,6 +5,7 @@ from sitelog.sections import (
     SectionList,
 )
 from sitelog import _format_string
+from datetime import datetime as dt
 
 
 class Frequency(SubSection):
@@ -50,8 +51,23 @@ class Frequency(SubSection):
 
     @effective_dates.setter
     def effective_dates(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
+        if isinstance(value, dt):
+            value = value.strftime("%Y-%m-%d")
+        elif isinstance(value, list):
+            list_dates = []
+            joint = "/"
+            for date in value:
+                list_dates.append(date.strftime("%Y-%m-%d"))
+            value = joint.join(list_dates)
+        elif value == "":
+            pass
+        else:
+            list_dates = value.split("/")
+            for date in list_dates:
+                try:
+                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                except:
+                    raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Effective Dates"] = value
 
     @property
@@ -102,4 +118,5 @@ class FrequencyStandard(SectionList):
             s = Frequency()
             s.subtitle = "x"
             section_text += s.string()
+        
         return section_text

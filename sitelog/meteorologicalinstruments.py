@@ -1,5 +1,6 @@
 import re
 from enum import Enum
+from datetime import datetime as dt
 
 
 class SensorType(Enum):
@@ -162,8 +163,15 @@ class MetInstrument(Section):
 
     @calibration_date.setter
     def calibration_date(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Calibration date must be of the format CCYY-MM-DDT")
+        if isinstance(value, dt):
+            value = value.strftime("%Y-%m-%d")
+        elif value == "":
+            pass
+        else:
+            try:
+                datetime_object = dt.strptime(value, '%Y-%m-%d')
+            except:
+                raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         self._data["Calibration date"] = value
 
     @property
@@ -172,8 +180,23 @@ class MetInstrument(Section):
 
     @effective_dates.setter
     def effective_dates(self, value):
-        if not (re.match(r"^\d{4}\-\d\d\-\d\d", value) or value==""):
-            raise ValueError("Effective Dates must be of the format CCYY-MM-DD")
+        if isinstance(value, dt):
+            value = value.strftime("%Y-%m-%d")
+        elif isinstance(value, list):
+            list_dates = []
+            joint = "/"
+            for date in value:
+                list_dates.append(date.strftime("%Y-%m-%d"))
+            value = joint.join(list_dates)
+        elif value == "":
+            pass
+        else:
+            list_dates = value.split("/")
+            for date in list_dates:
+                try:
+                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                except:
+                    raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Effective Dates"] = value
 
     @property
@@ -193,6 +216,7 @@ class MetInstrument(Section):
             section_text = f"""
 {self.number}{self.title}{self.model}
 """
+       
         elif self.subsubtitle == "2.":
             section_text = f"""
 {self.number}{self.title}{self.model}
@@ -205,6 +229,7 @@ class MetInstrument(Section):
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
 """
+        
         elif self.subsubtitle == "4.":
             section_text = f"""
 {self.number}{self.title}{self.model}
@@ -229,6 +254,7 @@ class MetInstrument(Section):
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
 """
+        
         return section_text
 
 
@@ -267,4 +293,5 @@ class Meteorological(SectionList):
             s.subtitle = "x."
             s.number = "8." + s.subtitle + "x"
             section_text += s.string()
+        
         return section_text

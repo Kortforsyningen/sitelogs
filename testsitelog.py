@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime as dt
 from sitelog import (
     SiteLog,
     GnssReceiver,
@@ -29,7 +29,7 @@ from sitelog.more_info import MoreInfo
 
 if __name__ == "__main__":
     # Læs fra en eksisterende sitelog
-    sitelog = SiteLog("fyha_20161220.log")
+    sitelog = SiteLog("onsa_20191104.log")
     # ændr noget
     sitelog.header.code = "4422"
     sitelog.header.prepared_by = "Tanya"
@@ -60,7 +60,8 @@ if __name__ == "__main__":
         site_name="Station station",
         site_code="STAT",
         bedrock_condition="FRESH",
-        monument_h="3m"
+        monument_h="3m",
+        date= '1999-12-12'
         ) 
 
     log2.gnss.add_section(GnssReceiver(
@@ -95,7 +96,8 @@ if __name__ == "__main__":
         model="third"
     ))
     log2.meteorological.add_section(MetInstrument(
-        instrument=SensorType.TEMPERATURE
+        instrument=SensorType.TEMPERATURE,
+        effective_dates= [dt.now(), dt.now()]
     ))
     log2.local_ties.add_section(Tie(
         marker_name="markers2",
@@ -112,7 +114,7 @@ if __name__ == "__main__":
         source="Metal roof"
     ))
     log2.episodic_effects.add_section(Effect(
-        date = "2019-11-12"
+        date = dt.now()
     ))
     log2.contact_agency = ContactAgencies(
         agency = "UPS"
