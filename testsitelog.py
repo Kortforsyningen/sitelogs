@@ -29,7 +29,7 @@ from sitelog.more_info import MoreInfo
 
 if __name__ == "__main__":
     # Læs fra en eksisterende sitelog
-    sitelog = SiteLog("onsa_20191104.log")
+    sitelog = SiteLog("fyha_20161220.log")
     # ændr noget
     sitelog.header.code = "4422"
     sitelog.header.prepared_by = "Tanya"
