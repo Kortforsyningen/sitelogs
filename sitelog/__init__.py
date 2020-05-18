@@ -1,6 +1,8 @@
 import re
 import textwrap
 
+__version__ = "1.0.0"
+
 
 def _determine_line_type(line):
     """
