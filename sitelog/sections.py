@@ -10,7 +10,7 @@ class Section:
     def __init__(self):
         self.title = ""
         self.subtitle = ""
-        self.subsubtitle =""
+        self.subsubtitle = ""
         self._data = {}
         self.freeform = []
 
@@ -76,20 +76,20 @@ class SectionList(Section):
 
     def __setitem__(self, index, value):
         try:
-            value.subtitle = str(index + 1)+"."
+            value.subtitle = str(index + 1) + "."
             self._subsections[index] = value
         except IndexError:
             if index == len(self._subsections):
                 if self.section_type == "subsectionheader":
-                    value.subtitle = str(index + 1)+"."
+                    value.subtitle = str(index + 1) + "."
                 else:
-                    value.subtitle = "x"+"."
+                    value.subtitle = "x" + "."
                 self._subsections.append(value)
 
     def add_section(self, value):
         index = len(self._subsections)
         self._subsections.append(value)
-        value.subtitle =""
+        value.subtitle = ""
         value.subtitle = str(index + 1)
 
     def read_lines(self, lines):
@@ -117,7 +117,7 @@ class SubSection(Section):
     # Class for subsections of SectionList
     def __init__(self):
         super().__init__()
-        self.subsectionheader =""
+        self.subsectionheader = ""
 
 
 class SectionListHeader(SectionList):
@@ -128,10 +128,10 @@ class SectionListHeader(SectionList):
 
     def __init__(self):
         super().__init__()
-        #self._subsections = []
+        # self._subsections = []
         self.header = {}
-        #self.subsection_type = None
-        #self.section_type = ""
+        # self.subsection_type = None
+        # self.section_type = ""
 
     # def __getitem__(self, index):
     #     return self._subsections[index]

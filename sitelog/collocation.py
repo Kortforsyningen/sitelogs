@@ -11,7 +11,7 @@ from datetime import datetime as dt
 class CollocationInstrument(SubSection):
     def __init__(
         self, instrumentation_type="", status="", effective_dates="", notes=""
-        ):
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
@@ -67,7 +67,7 @@ class CollocationInstrument(SubSection):
             list_dates = value.split("/")
             for date in list_dates:
                 try:
-                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                    datetime_object = dt.strptime(date, "%Y-%m-%d")
                 except:
                     raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Effective Dates"] = value
@@ -81,7 +81,9 @@ class CollocationInstrument(SubSection):
         self._data["Notes"] = value
 
     def string(self):
-        self.subsectionheader = _format_string("Instrumentation Type", "subsectitle", len(str(self.subtitle)))
+        self.subsectionheader = _format_string(
+            "Instrumentation Type", "subsectitle", len(str(self.subtitle))
+        )
         self.notes = _format_string(self.notes, "multilinevalue")
         section_text = f"""
 7.{self.subtitle}{self.subsectionheader}{self.instrumentation_type}
@@ -120,5 +122,5 @@ class Collocation(SectionList):
             s = CollocationInstrument()
             s.subtitle = "x"
             section_text += s.string()
-        
+
         return section_text

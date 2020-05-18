@@ -23,14 +23,25 @@ gen_title = "Humidity/Pressure/Temp. Sensor Model, Water Vapor Radiometer or Oth
 
 class MetInstrument(Section):
     def __init__(
-        self, instrument=SensorType.OTHER, model="", manufacturer="", serial_number="", data_interval="", distance_antenna="",
-        accuracy="", aspiration="", height_diff="", calibration_date="", effective_dates="",
-        notes="", other=""
+        self,
+        instrument=SensorType.OTHER,
+        model="",
+        manufacturer="",
+        serial_number="",
+        data_interval="",
+        distance_antenna="",
+        accuracy="",
+        aspiration="",
+        height_diff="",
+        calibration_date="",
+        effective_dates="",
+        notes="",
+        other="",
     ):
         super().__init__()
         self._data = self._template_dict()
         self.subsubtitle = ""
-        self.number =""
+        self.number = ""
         self.title = gen_title
         self.instrument = instrument
         self.model = model
@@ -169,7 +180,7 @@ class MetInstrument(Section):
             pass
         else:
             try:
-                datetime_object = dt.strptime(value, '%Y-%m-%d')
+                datetime_object = dt.strptime(value, "%Y-%m-%d")
             except:
                 raise ValueError("Incorrect date format, should be YYYY-MM-DD")
         self._data["Calibration date"] = value
@@ -194,7 +205,7 @@ class MetInstrument(Section):
             list_dates = value.split("/")
             for date in list_dates:
                 try:
-                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                    datetime_object = dt.strptime(date, "%Y-%m-%d")
                 except:
                     raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Effective Dates"] = value
@@ -216,7 +227,7 @@ class MetInstrument(Section):
             section_text = f"""
 {self.number}{self.title}{self.model}
 """
-       
+
         elif self.subsubtitle == "2.":
             section_text = f"""
 {self.number}{self.title}{self.model}
@@ -229,7 +240,7 @@ class MetInstrument(Section):
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
 """
-        
+
         elif self.subsubtitle == "4.":
             section_text = f"""
 {self.number}{self.title}{self.model}
@@ -254,7 +265,7 @@ class MetInstrument(Section):
        Effective Dates        : {self.effective_dates}
        Notes                  : {self.notes}
 """
-        
+
         return section_text
 
 
@@ -283,9 +294,7 @@ class Meteorological(SectionList):
                     subsection.subtitle = str(
                         self.list_subtitles.count(subsection.subsubtitle)
                     )
-                subsection.number = (
-                    "8." + subsection.subsubtitle + subsection.subtitle
-                )
+                subsection.number = "8." + subsection.subsubtitle + subsection.subtitle
                 section_text += subsection.string()
         else:
             s = self.subsection_type()
@@ -293,5 +302,5 @@ class Meteorological(SectionList):
             s.subtitle = "x."
             s.number = "8." + s.subtitle + "x"
             section_text += s.string()
-        
+
         return section_text

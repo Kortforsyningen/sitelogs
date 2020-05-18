@@ -11,9 +11,17 @@ from datetime import datetime as dt
 
 class GnssReceiver(SubSection):
     def __init__(
-        self, receiver_type="", sat_sys="", serial="", firmware="", cutoff="",
-        date_installed="", date_removed="", temperature="", additional=""
-        ):
+        self,
+        receiver_type="",
+        sat_sys="",
+        serial="",
+        firmware="",
+        cutoff="",
+        date_installed="",
+        date_removed="",
+        temperature="",
+        additional="",
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.receiver_type = receiver_type
@@ -25,7 +33,6 @@ class GnssReceiver(SubSection):
         self.date_removed = date_removed
         self.temperature = temperature
         self.additional = additional
-
 
     def _template_dict(self):
         data = {
@@ -104,7 +111,7 @@ class GnssReceiver(SubSection):
             pass
         else:
             datetime_object = None
-            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+            time_formats = ["%Y-%m-%dT%H:%M%Z", "%Y-%m-%dT%H:%MZ", "%Y-%m-%d"]
 
             for format in time_formats:
                 try:
@@ -112,7 +119,7 @@ class GnssReceiver(SubSection):
                     break
                 except:
                     continue
-            
+
             if datetime_object is None:
                 raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
         self._data["Date Installed"] = value
@@ -132,7 +139,7 @@ class GnssReceiver(SubSection):
             pass
         else:
             datetime_object = None
-            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+            time_formats = ["%Y-%m-%dT%H:%M%Z", "%Y-%m-%dT%H:%MZ", "%Y-%m-%d"]
 
             for format in time_formats:
                 try:
@@ -140,7 +147,7 @@ class GnssReceiver(SubSection):
                     break
                 except:
                     continue
-            
+
             if datetime_object is None:
                 raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
         self._data["Date Removed"] = value
@@ -162,7 +169,9 @@ class GnssReceiver(SubSection):
         self._data["Additional Information"] = value
 
     def string(self):
-        self.subsectionheader = _format_string("Receiver Type", "subsectitle", len(str(self.subtitle)))
+        self.subsectionheader = _format_string(
+            "Receiver Type", "subsectitle", len(str(self.subtitle))
+        )
         self.additional = _format_string(self.additional, "multilinevalue")
         section_text = f"""
 3.{self.subtitle}{self.subsectionheader}{self.receiver_type}
@@ -175,7 +184,7 @@ class GnssReceiver(SubSection):
      Temperature Stabiliz.    : {self.temperature}
      Additional Information   : {self.additional}
 """
-        
+
         return section_text
 
 
@@ -197,5 +206,5 @@ class GNSS(SectionList):
             s = self.subsection_type()
             s.subtitle = "x"
             section_text += s.string()
-        
+
         return section_text

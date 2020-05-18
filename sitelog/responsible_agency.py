@@ -9,7 +9,7 @@ from sitelog import _format_string
 class ResponsibleAgency(Section):
     def __init__(
         self, contact_name="", primary_phone="", secondary_phone="", fax="", email=""
-        ):
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.contact_name = contact_name
@@ -165,5 +165,5 @@ class ResponsibleAgencies(SectionListHeader):
         section_text += f"""
      Additional Information   : {self.additional}
         """
-        
+
         return section_text

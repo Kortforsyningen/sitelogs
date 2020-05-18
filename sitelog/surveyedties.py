@@ -10,9 +10,19 @@ from datetime import datetime as dt
 
 class Tie(SubSection):
     def __init__(
-        self, marker_name="", marker_usage="", marker_cdp="", marker_domes="", dx="",
-        dy="", dz="", accuracy="", method="", date_measured="", additional=""
-        ):
+        self,
+        marker_name="",
+        marker_usage="",
+        marker_cdp="",
+        marker_domes="",
+        dx="",
+        dy="",
+        dz="",
+        accuracy="",
+        method="",
+        date_measured="",
+        additional="",
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
@@ -138,7 +148,7 @@ class Tie(SubSection):
             pass
         else:
             datetime_object = None
-            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+            time_formats = ["%Y-%m-%dT%H:%M%Z", "%Y-%m-%dT%H:%MZ", "%Y-%m-%d"]
 
             for format in time_formats:
                 try:
@@ -146,7 +156,7 @@ class Tie(SubSection):
                     break
                 except:
                     continue
-            
+
             if datetime_object is None:
                 raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
         self._data["Date Measured"] = value
@@ -161,7 +171,9 @@ class Tie(SubSection):
 
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
-        self.subsectionheader = _format_string("Tied Marker Name", "subsectitle", len(str(self.subtitle)))
+        self.subsectionheader = _format_string(
+            "Tied Marker Name", "subsectitle", len(str(self.subtitle))
+        )
         section_text = f"""
 5.{self.subtitle}{self.subsectionheader}{self.marker_name}
      Tied Marker Usage        : {self.marker_usage}
@@ -176,7 +188,7 @@ class Tie(SubSection):
      Date Measured            : {self.date_measured}
      Additional Information   : {self.additional}
 """
-        
+
         return section_text
 
 
@@ -216,5 +228,5 @@ class LocalTies(SectionList):
             s = Tie()
             s.subtitle = "x"
             section_text += s.string()
-        
+
         return section_text

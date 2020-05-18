@@ -8,6 +8,7 @@ from sitelog.sections import (
 )
 from sitelog import _format_string
 
+
 class Effect(Section):
     def __init__(self, date="", event=""):
         self._data = self._template_dict()
@@ -41,7 +42,7 @@ class Effect(Section):
             list_dates = value.split("/")
             for date in list_dates:
                 try:
-                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                    datetime_object = dt.strptime(date, "%Y-%m-%d")
                 except:
                     raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Date"] = value
@@ -60,7 +61,7 @@ class Effect(Section):
 10.{self.subtitle} Date                     : {self.date}
      Event                    : {self.event}
 """
-        
+
         return section_text
 
 
@@ -82,5 +83,5 @@ class EpisodicEffects(SectionList):
             s = self.subsection_type()
             s.subtitle = "x"
             section_text += s.string()
-        
+
         return section_text

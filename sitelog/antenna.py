@@ -10,10 +10,22 @@ from datetime import datetime as dt
 
 class AntennaType(SubSection):
     def __init__(
-        self, antenna_type="", serial_number="", antenna_reference="", up="", north="",
-        east="", north_alignment="", radome_type="", radome_serial="", cable_type="",
-        cable_length="", date_installed="",date_removed="", additional=""
-        ):
+        self,
+        antenna_type="",
+        serial_number="",
+        antenna_reference="",
+        up="",
+        north="",
+        east="",
+        north_alignment="",
+        radome_type="",
+        radome_serial="",
+        cable_type="",
+        cable_length="",
+        date_installed="",
+        date_removed="",
+        additional="",
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.antenna_type = antenna_type
@@ -180,7 +192,7 @@ class AntennaType(SubSection):
             pass
         else:
             datetime_object = None
-            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+            time_formats = ["%Y-%m-%dT%H:%M%Z", "%Y-%m-%dT%H:%MZ", "%Y-%m-%d"]
 
             for format in time_formats:
                 try:
@@ -188,7 +200,7 @@ class AntennaType(SubSection):
                     break
                 except:
                     continue
-            
+
             if datetime_object is None:
                 raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
         self._data["Date Installed"] = value
@@ -208,7 +220,7 @@ class AntennaType(SubSection):
             pass
         else:
             datetime_object = None
-            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+            time_formats = ["%Y-%m-%dT%H:%M%Z", "%Y-%m-%dT%H:%MZ", "%Y-%m-%d"]
 
             for format in time_formats:
                 try:
@@ -216,7 +228,7 @@ class AntennaType(SubSection):
                     break
                 except:
                     continue
-            
+
             if datetime_object is None:
                 raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
         self._data["Date Removed"] = value
@@ -231,7 +243,9 @@ class AntennaType(SubSection):
 
     def string(self):
         self.additional = _format_string(self.additional, "multilinevalue")
-        self.subsectionheader = _format_string("Antenna Type", "subsectitle", len(str(self.subtitle)))
+        self.subsectionheader = _format_string(
+            "Antenna Type", "subsectitle", len(str(self.subtitle))
+        )
         section_text = f"""
 4.{self.subtitle}{self.subsectionheader}{self.antenna_type}
      Serial Number            : {self.serial_number}
@@ -289,5 +303,5 @@ class Antenna(SectionList):
             s = AntennaType()
             s.subtitle = "x"
             section_text += s.string()
-        
+
         return section_text

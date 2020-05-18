@@ -9,13 +9,11 @@ from datetime import datetime as dt
 
 
 class Frequency(SubSection):
-    def __init__(
-        self, standard_type="", input_freq="", effective_dates="", notes=""
-        ):
+    def __init__(self, standard_type="", input_freq="", effective_dates="", notes=""):
         super().__init__()
         self._data = self._template_dict()
         self.number = None
-        self.standard_type= standard_type
+        self.standard_type = standard_type
         self.input_freq = input_freq
         self.effective_dates = effective_dates
         self.notes = notes
@@ -65,7 +63,7 @@ class Frequency(SubSection):
             list_dates = value.split("/")
             for date in list_dates:
                 try:
-                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                    datetime_object = dt.strptime(date, "%Y-%m-%d")
                 except:
                     raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Effective Dates"] = value
@@ -80,7 +78,9 @@ class Frequency(SubSection):
 
     def string(self):
         self.notes = _format_string(self.notes, "multilinevalue")
-        self.subsectionheader = _format_string("Standard Type", "subsectitle", len(str(self.subtitle)))
+        self.subsectionheader = _format_string(
+            "Standard Type", "subsectitle", len(str(self.subtitle))
+        )
         section_text = f"""
 6.{self.subtitle}{self.subsectionheader}{self.standard_type}
        Input Frequency        : {self.input_freq}
@@ -118,5 +118,5 @@ class FrequencyStandard(SectionList):
             s = Frequency()
             s.subtitle = "x"
             section_text += s.string()
-        
+
         return section_text

@@ -6,9 +6,19 @@ from sitelog import _format_string
 
 class SiteLocation(Section):
     def __init__(
-        self, city="", state="", country="", tectonic_plate="", x="", y="", z="", latitude="",
-        longitude="", elevation="", additional=""
-        ):
+        self,
+        city="",
+        state="",
+        country="",
+        tectonic_plate="",
+        x="",
+        y="",
+        z="",
+        latitude="",
+        longitude="",
+        elevation="",
+        additional="",
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.city = city
@@ -40,8 +50,6 @@ class SiteLocation(Section):
             "Additional Information": "(multiple lines)",
         }
         return data
-
-
 
     @property
     def city(self):
@@ -173,5 +181,5 @@ class SiteLocation(Section):
        Elevation (m,ellips.)  : {self.elevation}
      Additional Information   : {self.additional}
 """
-        
+
         return section_text

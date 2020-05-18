@@ -21,8 +21,13 @@ class Header:
 
 class Form(Section):
     def __init__(
-        self, prepared_by="", date ="2019-12-12", report_type = "NEW", previous_log = "", changed_sections = ""
-        ):
+        self,
+        prepared_by="",
+        date="2019-12-12",
+        report_type="NEW",
+        previous_log="",
+        changed_sections="",
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.prepared_by = prepared_by
@@ -70,7 +75,7 @@ class Form(Section):
             pass
         else:
             try:
-                datetime_object = dt.strptime(value, '%Y-%m-%d')
+                datetime_object = dt.strptime(value, "%Y-%m-%d")
             except:
                 raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Date Prepared"] = value

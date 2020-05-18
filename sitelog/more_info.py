@@ -5,9 +5,18 @@ from sitelog import _format_string
 
 class MoreInfo(Section):
     def __init__(
-        self, primary_center="",secondary_center="", info_url="", site_map="",
-        site_diagram="", horizon_mask="", monument="", site_pictures="", additional="", graphic=""
-        ):
+        self,
+        primary_center="",
+        secondary_center="",
+        info_url="",
+        site_map="",
+        site_diagram="",
+        horizon_mask="",
+        monument="",
+        site_pictures="",
+        additional="",
+        graphic="",
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.primary_center = primary_center
@@ -142,7 +151,7 @@ class MoreInfo(Section):
         for i, line in enumerate(self.graphic):
             if re.findall("Antenna Graphics with Dimensions", line):
                 if len(self.graphic) > i:
-                    for line in self.graphic[i+1:]:
+                    for line in self.graphic[i + 1 :]:
                         section_text += "\n" + line
 
         return section_text

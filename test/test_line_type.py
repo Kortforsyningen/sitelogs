@@ -132,18 +132,20 @@ class TestLineType(unittest.TestCase):
         self.assertEqual(antenna_text, antenna_res)
 
     def test_format_string(self):
-        line = ("If an antenna has a cover which is integral"
-                " and not ordinarily removable by the user,"
-                " it is considered part of the antenna and"
-                " NONE is to be used for the radome code.")
+        line = (
+            "If an antenna has a cover which is integral"
+            " and not ordinarily removable by the user,"
+            " it is considered part of the antenna and"
+            " NONE is to be used for the radome code."
+        )
 
         line_type = "multilinevalue"
-        
+
         multiline = """If an antenna has a cover which is integral and
                               : not ordinarily removable by the user, it is
                               : considered part of the antenna and NONE is to be
                               : used for the radome code."""
-        
+
         self.assertEqual(multiline, _format_string(line, line_type))
 
     def test_meteorological(self):
@@ -177,12 +179,13 @@ class TestLineType(unittest.TestCase):
 
     def test_meteorological_new(self):
         meteorological = Meteorological()
-        meteorological.add_section(MetInstrument(
-            instrument=SensorType.PRESSURE,
-            model = "Pres. Sens.",
-            serial_number = "1111122"
-
-        ))
+        meteorological.add_section(
+            MetInstrument(
+                instrument=SensorType.PRESSURE,
+                model="Pres. Sens.",
+                serial_number="1111122",
+            )
+        )
         met_text = """
 8.   Meteorological Instrumentation
 

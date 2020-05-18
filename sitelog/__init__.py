@@ -29,7 +29,7 @@ def _determine_line_type(line):
     return line_type
 
 
-def _format_string(line, line_type, num_char = None):
+def _format_string(line, line_type, num_char=None):
     """
     formatting lines to sitelog format 
 
@@ -54,12 +54,12 @@ def _format_string(line, line_type, num_char = None):
     if line_type == "subsectitle":
         if not num_char:
             num_char = 0
-        
-        formatted_string = "{:{}}{:25}{:2}".format("", 3-num_char, line, ":")
+
+        formatted_string = "{:{}}{:25}{:2}".format("", 3 - num_char, line, ":")
 
     if line_type == "subsubsecnr":
         num_char = len(line)
-        formatted_string = "{:{}}".format(line, 11-num_char)
+        formatted_string = "{:{}}".format(line, 11 - num_char)
 
     if line_type == "subsubsectitle":
         if len(line) < 23:

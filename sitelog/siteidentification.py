@@ -6,10 +6,26 @@ from datetime import datetime as dt
 
 class SiteIdentification(Section):
     def __init__(
-        self, site_name="", site_code="XXXX", inscription="", IERS_number="", CDP_number="", monument="", monument_h="",
-        foundation="", foundation_depth="", marker="", date="", geologic="", bedrock_type="", bedrock_condition="",
-        fracture="", fault="", distance="", additional=""
-        ):
+        self,
+        site_name="",
+        site_code="XXXX",
+        inscription="",
+        IERS_number="",
+        CDP_number="",
+        monument="",
+        monument_h="",
+        foundation="",
+        foundation_depth="",
+        marker="",
+        date="",
+        geologic="",
+        bedrock_type="",
+        bedrock_condition="",
+        fracture="",
+        fault="",
+        distance="",
+        additional="",
+    ):
         self._data = self._template_dict()
         self.site_name = site_name
         self.site_code = site_code
@@ -29,7 +45,6 @@ class SiteIdentification(Section):
         self.fault = fault
         self.distance = distance
         self.additional = additional
-
 
     def _template_dict(self):
         """
@@ -58,7 +73,6 @@ class SiteIdentification(Section):
         }
         return data
 
-
     @property
     def site_name(self):
         return self._data["Site Name"]
@@ -73,7 +87,7 @@ class SiteIdentification(Section):
 
     @site_code.setter
     def site_code(self, value):
-        if not (re.match(r"^[A-Z0-9]{4}$", value) or value==""):
+        if not (re.match(r"^[A-Z0-9]{4}$", value) or value == ""):
             raise ValueError("The Four Character ID *must* be 4 characters long!")
         self._data["Four Character ID"] = value
 
@@ -160,7 +174,7 @@ class SiteIdentification(Section):
             pass
         else:
             datetime_object = None
-            time_formats = ['%Y-%m-%dT%H:%M%Z','%Y-%m-%dT%H:%MZ','%Y-%m-%d']
+            time_formats = ["%Y-%m-%dT%H:%M%Z", "%Y-%m-%dT%H:%MZ", "%Y-%m-%d"]
 
             for format in time_formats:
                 try:
@@ -168,10 +182,10 @@ class SiteIdentification(Section):
                     break
                 except:
                     continue
-            
+
             if datetime_object is None:
                 raise ValueError("Incorrect date format, should be (CCYY-MM-DDThh:mmZ)")
-                        
+
         self._data["Date Installed"] = value
 
     @property

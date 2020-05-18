@@ -22,8 +22,13 @@ gen_title = "Local Condition"
 
 class LocalCondition(Section):
     def __init__(
-        self, condition =ConditionTypes.UNKNOWN, source="", observed_degradation="", dates="", additional=""
-        ):
+        self,
+        condition=ConditionTypes.UNKNOWN,
+        source="",
+        observed_degradation="",
+        dates="",
+        additional="",
+    ):
         super().__init__()
         self._data = self._template_dict()
         self.title = gen_title
@@ -99,7 +104,7 @@ class LocalCondition(Section):
             list_dates = value.split("/")
             for date in list_dates:
                 try:
-                    datetime_object = dt.strptime(date, '%Y-%m-%d')
+                    datetime_object = dt.strptime(date, "%Y-%m-%d")
                 except:
                     raise ValueError("Incorrect data format, should be YYYY-MM-DD")
         self._data["Effective Dates"] = value
@@ -129,7 +134,7 @@ class LocalCondition(Section):
        Effective Dates        : {self.dates}
        Additional Information : {self.additional}
 """
-        
+
         return section_text
 
 
@@ -156,9 +161,7 @@ class Conditions(SectionList):
                     subsection.subtitle = str(
                         self.list_subtitles.count(subsection.subsubtitle)
                     )
-                subsection.number = (
-                    "9." + subsection.subsubtitle + subsection.subtitle
-                )
+                subsection.number = "9." + subsection.subsubtitle + subsection.subtitle
                 section_text += subsection.string()
         else:
             s = self.subsection_type()
@@ -166,5 +169,5 @@ class Conditions(SectionList):
             s.subtitle = "x."
             s.subsubtitle = "9." + s.subtitle + "x"
             section_text += s.string()
-        
+
         return section_text
