@@ -12,3 +12,13 @@ pip install .
 
 from the root of the repository.
 
+
+## Testing
+
+Run
+
+```
+pytest
+```
+
+from the root of the repository.

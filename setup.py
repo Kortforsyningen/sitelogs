@@ -27,7 +27,7 @@ def readme():
 
 
 setup(
-    name="sitelogs",
+    name="sitelog",
     version=sitelog.__version__,
     description=SHORT_DESCR,
     long_description=readme(),

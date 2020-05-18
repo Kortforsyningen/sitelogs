@@ -1,4 +1,7 @@
+import filecmp
+import tempfile
 from datetime import datetime as dt
+
 from sitelog import (
     SiteLog,
     GnssReceiver,
@@ -19,17 +22,16 @@ from sitelog.local_conditions import (
     LocalCondition,
     ConditionTypes,
 )
-#from sitelog.surveyedties import Tie
 from sitelog.episodic_effects import Effect
 from sitelog.contact_agency import (ContactAgency, ContactAgencies)
 from sitelog.responsible_agency import (ResponsibleAgency, ResponsibleAgencies)
 from sitelog.more_info import MoreInfo
-#from sitelog.receiver import GnssReceiver
 
 
-if __name__ == "__main__":
-    # Læs fra en eksisterende sitelog
-    sitelog = SiteLog("fyha_20161220.log")
+def test_modify_existing_sitelog():
+    """Læs fra en eksisterende sitelog og ændre på den."""
+
+    sitelog = SiteLog("test/data/fyha_20161220.log")
     # ændr noget
     sitelog.header.code = "4422"
     sitelog.header.prepared_by = "Tanya"
@@ -45,16 +47,18 @@ if __name__ == "__main__":
     sitelog.responsible_agency[1].contact_name = "SDFE"
     sitelog.responsible_agency[1].fax = "12345"
     sitelog.contact_agency[1].fax = "1111"
-    sitelog.write("test.log")
 
-    # Lav en ny fra scratch
+    logfile = tempfile.gettempdir() + "/test.log"
+    sitelog.write(logfile)
+
+    assert filecmp.cmp(logfile, 'test/data/fyha_edit.log')
+
+
+def test_from_scratch():
+    """Lav en ny fra scratch."""
     log2 = SiteLog()
     log2.header.code = "STAT"
     log2.form = Form(prepared_by = "Kristian Evers", date="2019-12-12")
-    # log2.form.site_name = "Station station"
-    # log2.form.site_code = "STAT"
-    # log2.form.report_type = "NEW"
-    #log2.form.date = "2020-02-05"
 
     log2.site_identification = SiteIdentification(
         site_name="Station station",
@@ -62,7 +66,7 @@ if __name__ == "__main__":
         bedrock_condition="FRESH",
         monument_h="3m",
         date= '1999-12-12'
-        ) 
+        )
 
     log2.gnss.add_section(GnssReceiver(
         receiver_type="ReceiverReceiver"
@@ -71,8 +75,6 @@ if __name__ == "__main__":
     log2.gnss.add_section(GnssReceiver(
         receiver_type="Receiver3"
     ))
-    # log2.gnss[0].receiver_type = "Receiver 1"
-    # log2.gnss[1].receiver_type = "Receiver 2"
     log2.antenna.add_section(AntennaType(
         antenna_type="Antenna1",
         north = 2
@@ -135,7 +137,7 @@ if __name__ == "__main__":
 
     log2.more_info = MoreInfo(
         primary_center="SDFE",
-        graphic= """
+        graphic= r"""
 AOAD/M_B  (Allen Osborne Design)
 
                          -----
@@ -157,13 +159,8 @@ AOAD/M_B  (Allen Osborne Design)
 
 ARP: Antenna Reference Point"""
     )
-    # Det ville gøre det lettere at bruge koden hvis man kunne gøre sådan her:
-    #
-    #  log2.gnss[0] = GnssReceiver(
-    #      receiver_type = 'Receiver 1',
-    #      sat_sys = 'GPS+GLONASS',
-    #      firmware = '3.2.5',
-    #      cutoff = '12',
-    #      additional = 'Dette er en super sej receiver...'
-    #  )
-    log2.write("test2.log")
+
+    logfile = tempfile.gettempdir() + "/test.log"
+    log2.write(logfile)
+
+    assert filecmp.cmp(logfile, 'test/data/from_scratch.log')
