@@ -91,7 +91,6 @@ class SectionList(Section):
         self._subsections.append(value)
         value.subtitle =""
         value.subtitle = str(index + 1)
-        print("j")
 
     def read_lines(self, lines):
         sections = []
